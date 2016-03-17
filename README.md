@@ -1,2 +1,2 @@
 # SEP
-Softwar
+Softwarare Entwicklung Praktikum 2016
