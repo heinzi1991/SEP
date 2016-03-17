@@ -1,8 +1,8 @@
 //------------------------------------------------------------------------------
 // Filename:		Command.h
 // Description:     Class representing a general command
-// Authors:         Anja Reibenbacher (1330231)
-//					Adam Ujvari				(1232056)
+// Authors:         Karim Koutp             (1314710)
+//					Tina Promitzer			(???????)
 //					Martin Zagar			(1131246)
 // Tutor:			Christoph Hack
 // Group:			2
