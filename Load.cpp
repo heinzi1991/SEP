@@ -10,6 +10,7 @@
 // Last change:     27.03.2015
 //------------------------------------------------------------------------------
 
+#include "Game.h"
 #include "Load.h"
 
 //------------------------------------------------------------------------------
@@ -30,6 +31,7 @@ int Load::execute(Game &board, std::vector<std::string> &params)
     if (params.size() == 3)
     {
         std::cout << "Load Befehl mit diesem Parameter: " << params[1] << std::endl;
+        board.loadFile(params[1]);
     }
     else
     {

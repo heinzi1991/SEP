@@ -27,7 +27,19 @@ class Game
 {
 private:
     std::map<std::string, Command*> possible_commands_;
-
+    char analyzeMaze[100][100];
+    char fixMaze[100][100];
+    
+    std::string input_moves_;
+    int maximum_steps_;
+    int current_steps_;
+    int start_position_x_;
+    int start_position_y_;
+    int current_position_x_;
+    int current_position_y_;
+    int maze_width_;
+    int maze_height_;
+    
     
     
     
@@ -45,6 +57,33 @@ public:
     // @return none
     //
     ~Game();
+    
+    //----------------------------------------------------------------------------
+    // Getter Methods
+    //
+    std::string getInputMoves();
+    int getMaximumSteps();
+    int getCurrentSteps();
+    int getStartPositionX();
+    int getStartPositionY();
+    int getCurrentPositionX();
+    int getCurrentPositionY();
+    int getMazeWidth();
+    int getMazeHeight();
+    
+    
+    //----------------------------------------------------------------------------
+    // Setter Methods
+    //
+    void setInputMoves(std::string inputMoves);
+    void setMaximumSteps(int maximumSteps);
+    void setCurrentSteps(int currentSteps);
+    void setStartPositionX(int startPositionX);
+    void setStartPositionY(int startPositionY);
+    void setCurrentPositionX(int currentPositionX);
+    void setCurrentPositionY(int currentPositionY);
+    void setMazeWidth(int mazeWidth);
+    void setMazeHeight(int mazeHeight);
     
     //----------------------------------------------------------------------------
     // Game::run() method
@@ -86,6 +125,21 @@ public:
     // @return std::string result
     //
     std::vector<std::string>splitCommand(std::string s);
+    
+    //---------------------------------------------------------------------------
+    void loadFile(std::string fileName);
+    
+    //---------------------------------------------------------------------------
+    void writeInAnalyzeArray(std::string oneLine, int lineNumber);
+    
+    //---------------------------------------------------------------------------
+    bool checkIfValidMaze();
+    
+    //---------------------------------------------------------------------------
+    void writeFixMaze();
+    
+    //---------------------------------------------------------------------------
+    void showMaze(std::string parameter);
     
 };
 

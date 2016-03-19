@@ -11,6 +11,7 @@
 //------------------------------------------------------------------------------
 
 #include "Show.h"
+#include "Game.h"
 
 //------------------------------------------------------------------------------
 Show::~Show()
@@ -30,10 +31,13 @@ int Show::execute(Game &board, std::vector<std::string> &params)
     if (params.size() == 2)
     {
         std::cout << "Show Befehl ohne Parameter." << std::endl;
+        board.showMaze("noMore");
+        
     }
     else if (params.size() == 3)
     {
         std::cout << "Show Befehl mit <more> Parameter." << std::endl;
+        board.showMaze("more");
     }
     else
     {
