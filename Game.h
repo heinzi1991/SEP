@@ -27,8 +27,8 @@ class Game
 {
 private:
     std::map<std::string, Command*> possible_commands_;
-    char analyzeMaze[100][100];
-    char fixMaze[100][100];
+    std::vector<std::vector<char>> check_map_;
+    std::vector<std::vector<char>> fix_game_map_;
     
     std::string input_moves_;
     int maximum_steps_;
@@ -130,10 +130,13 @@ public:
     void loadFile(std::string fileName);
     
     //---------------------------------------------------------------------------
-    void writeInAnalyzeArray(std::string oneLine, int lineNumber);
+    void writeToCheckMap(std::string oneLine, int lineNumber);
     
     //---------------------------------------------------------------------------
     bool checkIfValidMaze();
+    
+    //---------------------------------------------------------------------------
+    bool checkIfValidPath();
     
     //---------------------------------------------------------------------------
     void writeFixMaze();

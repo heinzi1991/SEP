@@ -306,13 +306,11 @@ void Game::loadFile(std::string fileName)
     
     if(!inf)
     {
-        
         std::cout << "Error: File could not be opened." << std::endl;
     }
     
     while (inf)
     {
-        
         std::string strInput;
         getline(inf, strInput);
         
@@ -328,60 +326,87 @@ void Game::loadFile(std::string fileName)
         
         if(strInput.length() > 0 && lineNumber >= 2) {
             
-            writeInAnalyzeArray(strInput, lineNumber);
+            writeToCheckMap(strInput, lineNumber);
         }
         
         lineNumber++;
     }
     
-    setMazeHeight(lineNumber - 3);
+    setMazeHeight((int)check_map_.size());
     
     if(checkIfValidMaze())
     {
-        setCurrentSteps(getMaximumSteps());
-        writeFixMaze();
+        if(checkIfValidPath())
+        {
+            std::cout << "No Error" << std::endl;
+            setCurrentSteps(getMaximumSteps());
+            writeFixMaze();
+        }
+        else
+        {
+            std::cout << "Error: Invalid path." << std::endl;
+        }
+        
     }
     else
     {
-        std::cout << "fail" << std::endl;
+       std::cout << "Error: Invalid file." << std::endl;
     }
 }
 
 //--------------------------------------------------------------------------------
-void Game::writeInAnalyzeArray(std::string oneLine, int lineNumber)
+void Game::writeToCheckMap(std::string oneLine, int lineNumber)
 {
     setMazeWidth((int)oneLine.length());
     
+    std::vector<char> buffer;
+    
     for(int counter = 0; counter < oneLine.length(); counter++)
     {
-        analyzeMaze[lineNumber - 2][counter] = oneLine.at(counter);
+        buffer.push_back(oneLine.at(counter));
     }
+    
+    check_map_.push_back(buffer);
 }
 
 //--------------------------------------------------------------------------------
 bool Game::checkIfValidMaze()
 {
-    
     int startFieldCounter = 0;
     int targetFieldCounter = 0;
+    int tempLineCount = 0;
     std::map<char, int> teleportMap;
-    std::map<char, int>::iterator it;
     
     
     for(int counter = 0; counter < getInputMoves().length(); counter++)
     {
         if(getInputMoves().at(counter) != 'u' && getInputMoves().at(counter) != 'd' && getInputMoves().at(counter) != 'l' && getInputMoves().at(counter) != 'r')
         {
-            std::cout << "Error: Invalid file. (inputMoves)" << std::endl;
+            std::cout << "wrong short moves" << std::endl;
             return false;
         }
     }
-
+    
     for(int counter = 0; counter < getMazeHeight(); counter++)
     {
-        for(int counter2 = 0; counter2 < getMazeWidth(); counter2++)
+        if(counter == 0)
         {
-            if(analyzeMaze[counter][counter2] == 'o')
+            tempLineCount = (int)check_map_.at(counter).size();
+        }
+        
+        if(tempLineCount > (int)check_map_.at(counter).size() || tempLineCount < (int)check_map_.at(counter).size())
+        {
+            return false;
+        }
+    }
+    
+    for(int counter = 0; counter < getMazeHeight(); counter++)
+    {
+        std::vector<char> buffer = check_map_.at(counter);
+        
+        for(int counter2 = 0; counter2 < buffer.size(); counter2++)
+        {
+            if (buffer.at(counter2) == 'o')
             {
                 if(startFieldCounter == 0)
                 {
@@ -391,12 +416,12 @@ bool Game::checkIfValidMaze()
                 }
                 else
                 {
-                    std::cout << "Error: Invalid file. (two startfields)" << std::endl;
+                    std::cout << "more startfields" << std::endl;
                     return false;
                 }
             }
             
-            if(analyzeMaze[counter][counter2] == 'x')
+            if(buffer.at(counter2) == 'x')
             {
                 if(targetFieldCounter == 0)
                 {
@@ -404,43 +429,66 @@ bool Game::checkIfValidMaze()
                 }
                 else
                 {
-                    std::cout << "Error: Invalid file. (two targetfields)" << std::endl;
+                    std::cout << "more targetfields" << std::endl;
                     return false;
                 }
             }
             
-            if(analyzeMaze[counter][counter2] >= 'A' && analyzeMaze[counter][counter2] <= 'Z')
+            if(buffer.at(counter2) >= 'A' && buffer.at(counter2) <= 'Z')
             {
-                teleportMap[analyzeMaze[counter][counter2]] += 1;
+                teleportMap[buffer.at(counter2)] += 1;
             }
         }
     }
     
-    for(it = teleportMap.begin(); it != teleportMap.end(); it++)
+    for(std::map<char, int>::iterator it = teleportMap.begin(); it != teleportMap.end(); it++)
     {
         if(it -> second != 2)
         {
-            std::cout << "Error: Invalid file. (no two teleport)" << std::endl;
+            std::cout << "not 2 teleports" << std::endl;
             return false;
         }
     }
     
-    for(int counter = 0; counter < getMazeWidth(); counter++)
+    std::vector<char> firstMazeRow = check_map_.at(0);
+    std::vector<char> lastMazeRow = check_map_.at(getMazeHeight() - 1);
+    
+    for(std::vector<char>::iterator it = firstMazeRow.begin(); it != firstMazeRow.end(); it++)
     {
-        if(analyzeMaze[0][counter] != '#' || analyzeMaze[getMazeHeight() - 1][counter] != '#')
+        if(*it != '#')
         {
-            std::cout << "Error: Invalid file. (up and down hashtag)" << std::endl;
+            std::cout << "first row no hashtag" << std::endl;
             return false;
         }
     }
     
-    for(int counter; counter < getMazeHeight(); counter++)
+    for(std::vector<char>::iterator it = lastMazeRow.begin(); it != lastMazeRow.end(); it++)
     {
-        if(analyzeMaze[counter][0] != '#' || analyzeMaze[counter][getMazeWidth() - 1] != '#')
+        if(*it != '#')
         {
-            std::cout << "Error: Invalid file. (left and right hashtag)" << std::endl;
+            std::cout << "last row no hashtag" << std::endl;
+            return false;
         }
     }
+    
+    for(int counter = 0; counter < getMazeHeight(); counter++)
+    {
+        std::vector<char> buffer = check_map_.at(counter);
+        
+        if(buffer.at(0) != '#' || buffer.at(buffer.size() - 1) != '#')
+        {
+            std::cout << "left and right no hashtag" << std::endl;
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+//--------------------------------------------------------------------------------
+bool Game::checkIfValidPath()
+{
+    //TODO - no plan today
     
     return true;
 }
@@ -450,10 +498,15 @@ void Game::writeFixMaze()
 {
     for(int counter = 0; counter < getMazeHeight(); counter++)
     {
-        for(int counter2 = 0; counter2 < getMazeWidth(); counter2++)
+        std::vector<char> buffer = check_map_.at(counter);
+        std::vector<char> bufferIn;
+        
+        for(int counter2 = 0; counter2 < buffer.size(); counter2++)
         {
-            fixMaze[counter][counter2] = analyzeMaze[counter][counter2];
+            bufferIn.push_back(buffer.at(counter2));
         }
+        
+        fix_game_map_.push_back(bufferIn);
     }
 }
 
@@ -464,9 +517,11 @@ void Game::showMaze(std::string parameter)
     {
         for(int counter = 0; counter < getMazeHeight(); counter++)
         {
-            for(int counter2 = 0; counter2 < getMazeWidth(); counter2++)
+            std::vector<char> buffer = fix_game_map_.at(counter);
+            
+            for(std::vector<char>::iterator it = buffer.begin(); it != buffer.end(); it++)
             {
-                std::cout << fixMaze[counter][counter2];
+                std::cout << *it;
             }
             
             std::cout << std::endl;
@@ -479,16 +534,16 @@ void Game::showMaze(std::string parameter)
         
         for(int counter = 0; counter < getMazeHeight(); counter++)
         {
-            for(int counter2 = 0; counter2 < getMazeWidth(); counter2++)
+            std::vector<char> buffer = fix_game_map_.at(counter);
+            
+            for(std::vector<char>::iterator it = buffer.begin(); it != buffer.end(); it++)
             {
-                std::cout << fixMaze[counter][counter2];
+                std::cout << *it;
             }
             
             std::cout << std::endl;
         }
     }
-    
-    
 }
 
 
