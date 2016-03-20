@@ -2,7 +2,7 @@
 // Filename:		Command.h
 // Description:     Class representing a general command
 // Authors:         Karim Koutp             (1314710)
-//					Tina Promitzer			(???????)
+//					Tina Promitzer			(1311885)
 //					Martin Zagar			(1131246)
 // Tutor:			Christoph Hack
 // Group:			2

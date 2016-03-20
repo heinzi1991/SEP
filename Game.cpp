@@ -2,7 +2,7 @@
 // Filename:		Command.h
 // Description:     Class representing a general command
 // Authors:         Karim Koutp             (1314710)
-//					Tina Promitzer			(???????)
+//					Tina Promitzer			(1311885)
 //					Martin Zagar			(1131246)
 // Tutor:			Christoph Hack
 // Group:			2
@@ -219,7 +219,6 @@ void Game::run()
     }
 }
 
-
 //------------------------------------------------------------------------------
 std::string Game::toLower(std::string word)
 {
@@ -340,19 +339,53 @@ void Game::loadFile(std::string fileName)
         {
             std::cout << "No Error" << std::endl;
             setCurrentSteps(getMaximumSteps());
+            setCurrentPositionX(getStartPositionX());
+            setCurrentPositionY(getStartPositionY());
             writeFixMaze();
+            saveAllTeleports();
         }
         else
         {
             std::cout << "Error: Invalid path." << std::endl;
         }
-        
     }
     else
     {
        std::cout << "Error: Invalid file." << std::endl;
     }
 }
+
+//--------------------------------------------------------------------------------
+void Game::saveFile(std::string fileName)
+{
+    std::ofstream onf(fileName);
+    
+    if(onf.is_open())
+    {
+        onf << getInputMoves() << std::endl;
+        onf << getMaximumSteps() << std::endl;
+        
+        for(int counter = 0; counter < fix_game_map_.size(); counter++)
+        {
+            std::vector<char> buffer = fix_game_map_.at(counter);
+            
+            for(int counter2 = 0; counter2 < buffer.size(); counter2++)
+            {
+                onf << buffer.at(counter2);
+            }
+            
+            onf << std::endl;
+        }
+        
+    }
+    else
+    {
+        std::cout << "Error: File could not be written." << std::endl;
+    }
+    
+    onf.close();
+}
+
 
 //--------------------------------------------------------------------------------
 void Game::writeToCheckMap(std::string oneLine, int lineNumber)
@@ -519,9 +552,16 @@ void Game::showMaze(std::string parameter)
         {
             std::vector<char> buffer = fix_game_map_.at(counter);
             
-            for(std::vector<char>::iterator it = buffer.begin(); it != buffer.end(); it++)
+            for(int counter2 = 0; counter2 < buffer.size(); counter2++)
             {
-                std::cout << *it;
+                if(counter == getCurrentPositionX() && counter2 == getCurrentPositionY())
+                {
+                    std::cout << "*";
+                }
+                else
+                {
+                    std::cout << buffer.at(counter2);
+                }
             }
             
             std::cout << std::endl;
@@ -536,15 +576,79 @@ void Game::showMaze(std::string parameter)
         {
             std::vector<char> buffer = fix_game_map_.at(counter);
             
-            for(std::vector<char>::iterator it = buffer.begin(); it != buffer.end(); it++)
+            for(int counter2 = 0; counter2 < buffer.size(); counter2++)
             {
-                std::cout << *it;
+                if(counter == getCurrentPositionX() && counter2 == getCurrentPositionY())
+                {
+                    std::cout << "*";
+                }
+                else
+                {
+                    std::cout << buffer.at(counter2);
+                }
             }
             
             std::cout << std::endl;
         }
     }
 }
+
+//--------------------------------------------------------------------------------
+void Game::saveAllTeleports()
+{
+    std::map<char, std::pair<std::pair<int, int>, std::pair<int, int>>>::iterator it;
+    std::map<char, int> testMap;
+    
+    for(char counter = 'A'; counter <= 'Z'; counter++)
+    {
+        testMap[counter] = 0;
+    }
+
+    for(int counter = 0; counter < fix_game_map_.size(); counter++)
+    {
+        std::vector<char> buffer = fix_game_map_.at(counter);
+        
+        for(int counter2 = 0; counter2 < buffer.size(); counter2++)
+        {
+            if(buffer.at(counter2) >= 'A' && buffer.at(counter2) <= 'Z' && testMap[buffer.at(counter2)] == 0)
+            {
+                testMap[buffer.at(counter2)] += 1;
+                std::pair<int, int> firstTuple = std::make_pair(counter, counter2);
+                std::pair<int, int> secondTuple = searchSecondPosition(counter, counter2 + 1, buffer.at(counter2));
+                all_teleports_map_[buffer.at(counter2)] = std::make_pair(firstTuple, secondTuple);
+            }
+        }
+    }
+}
+
+//--------------------------------------------------------------------------------
+std::pair<int, int>Game::searchSecondPosition(int firstCount, int secondCount, char searchChar)
+{
+    std::pair<int, int> returnPair;
+    int buffCounter;
+    
+    for(int counter = firstCount; counter < fix_game_map_.size(); counter++)
+    {
+        std::vector<char> buffer = fix_game_map_.at(counter);
+        
+        (counter == firstCount) ? (buffCounter = secondCount) : (buffCounter = 0);
+        
+        for(int counter2 = buffCounter; counter2 < buffer.size(); counter2++)
+        {
+            if(buffer.at(counter2) == searchChar)
+            {
+                returnPair.first = counter;
+                returnPair.second = counter2;
+            }
+        }
+    }
+    
+    return returnPair;
+}
+
+//--------------------------------------------------------------------------------
+
+
 
 
 

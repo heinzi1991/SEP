@@ -2,7 +2,7 @@
 // Filename:		Command.h
 // Description:     Class representing a general command
 // Authors:         Karim Koutp             (1314710)
-//					Tina Promitzer			(???????)
+//					Tina Promitzer			(1311885)
 //					Martin Zagar			(1131246)
 // Tutor:			Christoph Hack
 // Group:			2
@@ -17,6 +17,8 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <tuple>
+#include <utility>
 
 
 class Command;
@@ -29,6 +31,7 @@ private:
     std::map<std::string, Command*> possible_commands_;
     std::vector<std::vector<char>> check_map_;
     std::vector<std::vector<char>> fix_game_map_;
+    std::map<char, std::pair<std::pair<int, int>, std::pair<int, int>>> all_teleports_map_;
     
     std::string input_moves_;
     int maximum_steps_;
@@ -70,6 +73,7 @@ public:
     int getCurrentPositionY();
     int getMazeWidth();
     int getMazeHeight();
+    //std::map<char, std::tuple<int, int, int, int>> getTeleportMap();
     
     
     //----------------------------------------------------------------------------
@@ -84,6 +88,7 @@ public:
     void setCurrentPositionY(int currentPositionY);
     void setMazeWidth(int mazeWidth);
     void setMazeHeight(int mazeHeight);
+    //void setAllTeleportsMap(std::map<char, std::tuple<int, int, int, int>> teleportMap);
     
     //----------------------------------------------------------------------------
     // Game::run() method
@@ -130,6 +135,9 @@ public:
     void loadFile(std::string fileName);
     
     //---------------------------------------------------------------------------
+    void saveFile(std::string fileName);
+    
+    //---------------------------------------------------------------------------
     void writeToCheckMap(std::string oneLine, int lineNumber);
     
     //---------------------------------------------------------------------------
@@ -143,6 +151,15 @@ public:
     
     //---------------------------------------------------------------------------
     void showMaze(std::string parameter);
+    
+    //---------------------------------------------------------------------------
+    void saveAllTeleports();
+    
+    //---------------------------------------------------------------------------
+    std::pair<int, int> searchSecondPosition(int firstCount, int secondCount, char searchChar);
+    
+    //---------------------------------------------------------------------------
+    
     
 };
 

@@ -2,7 +2,7 @@
 // Filename:		Command.h
 // Description:     Class representing a general command
 // Authors:         Karim Koutp             (1314710)
-//					Tina Promitzer			(???????)
+//					Tina Promitzer			(1311885)
 //					Martin Zagar			(1131246)
 // Tutor:			Christoph Hack
 // Group:			2
@@ -30,7 +30,7 @@ int Load::execute(Game &board, std::vector<std::string> &params)
 {
     if (params.size() == 3)
     {
-        std::cout << "Load Befehl mit diesem Parameter: " << params[1] << std::endl;
+        //std::cout << "Load Befehl mit diesem Parameter: " << params[1] << std::endl;
         board.loadFile(params[1]);
     }
     else
