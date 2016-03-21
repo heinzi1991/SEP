@@ -33,13 +33,13 @@ int main(int argc, char **argv)
     
     if(argc == 3)
     {
-        if (strcmp(argv[1], "-s") == 0)
+        if ((std::string)argv[1] == "-s")
         {
             pokemon.setSaveMode(true);
             pokemon.setSaveFileName(argv[2]);
             
         }
-        else if (strcmp(argv[1], "-m") == 0)
+        else if ((std::string)argv[1] == "-m")
         {
             pokemon.setLoadMode(true);
             pokemon.loadFile(argv[2]);

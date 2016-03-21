@@ -81,7 +81,7 @@ void Game::setSaveFileName(std::string saveFileName)
 //------------------------------------------------------------------------------
 void Game::deleteCommands()
 {
-    for (auto iter=possible_commands_.begin();
+    for (auto iter = possible_commands_.begin();
          iter != possible_commands_.end();
          ++iter)
     {
@@ -208,7 +208,7 @@ void Game::initCommands()
     }
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void Game::loadFile(std::string fileName)
 {
     if(fileName.length() > 255)
@@ -290,7 +290,7 @@ void Game::loadFile(std::string fileName)
     }
 }
 
-//--------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void Game::saveFile(std::string fileName)
 {
     if(fileName.length() > 255)
@@ -338,7 +338,7 @@ void Game::saveFile(std::string fileName)
 }
 
 
-//--------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void Game::writeToCheckMap(std::string oneLine, int lineNumber)
 {
     maze_width_ = (int)oneLine.length();
@@ -353,7 +353,7 @@ void Game::writeToCheckMap(std::string oneLine, int lineNumber)
     check_map_.push_back(buffer);
 }
 
-//--------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 bool Game::checkIfValidMaze()
 {
     int startFieldCounter = 0;
@@ -470,7 +470,7 @@ bool Game::checkIfValidMaze()
     return true;
 }
 
-//--------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 bool Game::checkIfValidPath()
 {
     //TODO - no plan today
@@ -478,7 +478,7 @@ bool Game::checkIfValidPath()
     return true;
 }
 
-//--------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void Game::writeFixMaze()
 {
     for(int counter = 0; counter < check_map_.size(); counter++)
@@ -497,7 +497,7 @@ void Game::writeFixMaze()
     check_map_.clear();
 }
 
-//--------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void Game::showMaze(std::string parameter)
 {
     if(parameter == "noMore")
@@ -547,7 +547,7 @@ void Game::showMaze(std::string parameter)
     }
 }
 
-//--------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void Game::saveAllTeleports()
 {
     std::map<char, std::pair<std::pair<int, int>, std::pair<int, int>>>::iterator it;
@@ -575,7 +575,7 @@ void Game::saveAllTeleports()
     }
 }
 
-//--------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 std::pair<int, int>Game::searchSecondPosition(int firstCount, int secondCount, char searchChar)
 {
     std::pair<int, int> returnPair;
@@ -600,7 +600,7 @@ std::pair<int, int>Game::searchSecondPosition(int firstCount, int secondCount, c
     return returnPair;
 }
 
-//--------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void Game::makeMoveInDirection(std::string direction)
 {
     if(checkValidMove(direction))
@@ -614,7 +614,7 @@ void Game::makeMoveInDirection(std::string direction)
     
 }
 
-//--------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 bool Game::checkValidMove(std::string orientation)
 {
     if(orientation == "down")
@@ -654,7 +654,7 @@ bool Game::checkValidMove(std::string orientation)
     return false;
 }
 
-//--------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void Game::resetTheMaze()
 {
     input_moves_ = "";
