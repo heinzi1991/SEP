@@ -48,121 +48,25 @@ Game::~Game()
     
 }
 
-
 //------------------------------------------------------------------------------
-std::string Game::getInputMoves()
+void Game::setLoadMode(bool loadMode)
 {
-    return input_moves_;
+    load_mode_ = loadMode;
 }
 
 //------------------------------------------------------------------------------
-int Game::getMaximumSteps()
+void Game::setSaveMode(bool saveMode)
 {
-    return maximum_steps_;
+    save_mode_ = saveMode;
 }
 
 //------------------------------------------------------------------------------
-int Game::getCurrentSteps()
+void Game::setSaveFileName(std::string saveFileName)
 {
-    return current_steps_;
-}
-
-//------------------------------------------------------------------------------
-int Game::getStartPositionX()
-{
-    return start_position_x_;
-}
-
-//------------------------------------------------------------------------------
-int Game::getStartPositionY()
-{
-    return start_position_y_;
-}
-
-//------------------------------------------------------------------------------
-int Game::getCurrentPositionX()
-{
-    return current_position_x_;
-}
-
-//------------------------------------------------------------------------------
-int Game::getCurrentPositionY()
-{
-    return current_position_y_;
-}
-
-//------------------------------------------------------------------------------
-int Game::getMazeWidth()
-{
-    return maze_width_;
-}
-
-//------------------------------------------------------------------------------
-int Game::getMazeHeight()
-{
-    return maze_height_;
+    save_file_name_ = saveFileName;
 }
 
 
-
-
-
-
-
-
-//------------------------------------------------------------------------------
-void Game::setInputMoves(std::string inputMoves)
-{
-    input_moves_ = inputMoves;
-}
-
-//------------------------------------------------------------------------------
-void Game::setMaximumSteps(int maximumSteps)
-{
-    maximum_steps_ = maximumSteps;
-}
-
-//------------------------------------------------------------------------------
-void Game::setCurrentSteps(int currentSteps)
-{
-    current_steps_ = currentSteps;
-}
-
-//------------------------------------------------------------------------------
-void Game::setStartPositionX(int startPositionX)
-{
-    start_position_x_ = startPositionX;
-}
-
-//------------------------------------------------------------------------------
-void Game::setStartPositionY(int startPositionY)
-{
-    start_position_y_ = startPositionY;
-}
-
-//------------------------------------------------------------------------------
-void Game::setCurrentPositionX(int currentPositionX)
-{
-    current_position_x_ = currentPositionX;
-}
-
-//------------------------------------------------------------------------------
-void Game::setCurrentPositionY(int currentPositionY)
-{
-    current_position_y_ = currentPositionY;
-}
-
-//------------------------------------------------------------------------------
-void Game::setMazeWidth(int mazeWidth)
-{
-    maze_width_ = mazeWidth;
-}
-
-//------------------------------------------------------------------------------
-void Game::setMazeHeight(int mazeHeight)
-{
-    maze_height_ = mazeHeight;
-}
 
 
 
@@ -212,8 +116,15 @@ void Game::run()
             }
             else
             {
-                state = possible_commands_[splitted_input_[0]] ->
-                execute(*this, splitted_input_);
+                if(load_mode_ == false && (splitted_input_[0] != "load" && splitted_input_[0] != "quit"))
+                {
+                    std::cout << "Error: No maze loaded." << std::endl;
+                }
+                else
+                {
+                    state = possible_commands_[splitted_input_[0]] ->
+                    execute(*this, splitted_input_);
+                }
             }
         }
     }
@@ -277,7 +188,6 @@ void Game::initCommands()
         Reset *resest_command_ = new Reset("reset");
         Quit *quit_command_ = new Quit("quit");
         
-        
         command_objects_ = {load_command_,
                             save_command_,
                             fastmove_command_,
@@ -285,6 +195,7 @@ void Game::initCommands()
                             show_command_,
                             resest_command_,
                             quit_command_};
+        
     }
     catch (std::bad_alloc& ba)
     {
@@ -300,12 +211,29 @@ void Game::initCommands()
 //-----------------------------------------------------------------------------
 void Game::loadFile(std::string fileName)
 {
+    if(fileName.length() > 255)
+    {
+        std::cout << "Error: Wrong parameter." << std::endl;
+        return;
+    }
+    
+    for(int counter = 0; counter < fileName.length(); counter++)
+    {
+        if((fileName.at(counter) >= 32 &&  fileName.at(counter) < 46) || (fileName.at(counter) >= 58 && fileName.at(counter) < 65) || (fileName.at(counter) > 90 && fileName.at(counter) < 97) || (fileName.at(counter) > 122 && fileName.at(counter) < 127))
+        {
+            std::cout << "Error: Wrong parameter." << std::endl;
+            return;
+        }
+    }
+    
+
     int lineNumber = 0;
     std::ifstream inf(fileName);
     
     if(!inf)
     {
         std::cout << "Error: File could not be opened." << std::endl;
+        return;
     }
     
     while (inf)
@@ -315,12 +243,12 @@ void Game::loadFile(std::string fileName)
         
         if(lineNumber == 0)
         {
-            setInputMoves(strInput);
+            input_moves_ = strInput;
         }
         
         if(lineNumber == 1)
         {
-            setMaximumSteps(std::stoi(strInput));
+            maximum_steps_ = std::stoi(strInput);
         }
         
         if(strInput.length() > 0 && lineNumber >= 2) {
@@ -331,18 +259,25 @@ void Game::loadFile(std::string fileName)
         lineNumber++;
     }
     
-    setMazeHeight((int)check_map_.size());
+    maze_height_ = (int)check_map_.size();
     
     if(checkIfValidMaze())
     {
         if(checkIfValidPath())
         {
-            std::cout << "No Error" << std::endl;
-            setCurrentSteps(getMaximumSteps());
-            setCurrentPositionX(getStartPositionX());
-            setCurrentPositionY(getStartPositionY());
+            load_mode_ = true;
+            current_steps_ = maximum_steps_ - (int)input_moves_.length();
+            current_position_x_ = start_position_x_;
+            current_position_y_ = start_position_y_;
+            
+            if(load_mode_ == true)
+            {
+                fix_game_map_.clear();
+            }
+            
             writeFixMaze();
             saveAllTeleports();
+            showMaze("noMore");
         }
         else
         {
@@ -358,12 +293,28 @@ void Game::loadFile(std::string fileName)
 //--------------------------------------------------------------------------------
 void Game::saveFile(std::string fileName)
 {
+    if(fileName.length() > 255)
+    {
+        std::cout << "Error: Wrong parameter." << std::endl;
+        return;
+    }
+    
+    for(int counter = 0; counter < fileName.length(); counter++)
+    {
+        if((fileName.at(counter) >= 32 &&  fileName.at(counter) < 46) || (fileName.at(counter) >= 58 && fileName.at(counter) < 65) || (fileName.at(counter) > 90 && fileName.at(counter) < 97) || (fileName.at(counter) > 122 && fileName.at(counter) < 127))
+        {
+            std::cout << "Error: Wrong parameter." << std::endl;
+            return;
+        }
+    }
+
+    
     std::ofstream onf(fileName);
     
     if(onf.is_open())
     {
-        onf << getInputMoves() << std::endl;
-        onf << getMaximumSteps() << std::endl;
+        onf << input_moves_ << std::endl;
+        onf << maximum_steps_ << std::endl;
         
         for(int counter = 0; counter < fix_game_map_.size(); counter++)
         {
@@ -390,7 +341,7 @@ void Game::saveFile(std::string fileName)
 //--------------------------------------------------------------------------------
 void Game::writeToCheckMap(std::string oneLine, int lineNumber)
 {
-    setMazeWidth((int)oneLine.length());
+    maze_width_ = (int)oneLine.length();
     
     std::vector<char> buffer;
     
@@ -411,16 +362,16 @@ bool Game::checkIfValidMaze()
     std::map<char, int> teleportMap;
     
     
-    for(int counter = 0; counter < getInputMoves().length(); counter++)
+    for(int counter = 0; counter < input_moves_.length(); counter++)
     {
-        if(getInputMoves().at(counter) != 'u' && getInputMoves().at(counter) != 'd' && getInputMoves().at(counter) != 'l' && getInputMoves().at(counter) != 'r')
+        if(input_moves_.at(counter) != 'u' && input_moves_.at(counter) != 'd' && input_moves_.at(counter) != 'l' && input_moves_.at(counter) != 'r')
         {
             std::cout << "wrong short moves" << std::endl;
             return false;
         }
     }
     
-    for(int counter = 0; counter < getMazeHeight(); counter++)
+    for(int counter = 0; counter < check_map_.size(); counter++)
     {
         if(counter == 0)
         {
@@ -429,11 +380,12 @@ bool Game::checkIfValidMaze()
         
         if(tempLineCount > (int)check_map_.at(counter).size() || tempLineCount < (int)check_map_.at(counter).size())
         {
+            std::cout << "lines different size" << std::endl;
             return false;
         }
     }
     
-    for(int counter = 0; counter < getMazeHeight(); counter++)
+    for(int counter = 0; counter < check_map_.size(); counter++)
     {
         std::vector<char> buffer = check_map_.at(counter);
         
@@ -443,8 +395,8 @@ bool Game::checkIfValidMaze()
             {
                 if(startFieldCounter == 0)
                 {
-                    setStartPositionX(counter);
-                    setStartPositionY(counter2);
+                    start_position_x_ = counter;
+                    start_position_y_ = counter2;
                     startFieldCounter++;
                 }
                 else
@@ -484,7 +436,7 @@ bool Game::checkIfValidMaze()
     }
     
     std::vector<char> firstMazeRow = check_map_.at(0);
-    std::vector<char> lastMazeRow = check_map_.at(getMazeHeight() - 1);
+    std::vector<char> lastMazeRow = check_map_.at(check_map_.size() - 1);
     
     for(std::vector<char>::iterator it = firstMazeRow.begin(); it != firstMazeRow.end(); it++)
     {
@@ -504,7 +456,7 @@ bool Game::checkIfValidMaze()
         }
     }
     
-    for(int counter = 0; counter < getMazeHeight(); counter++)
+    for(int counter = 0; counter < check_map_.size(); counter++)
     {
         std::vector<char> buffer = check_map_.at(counter);
         
@@ -529,7 +481,7 @@ bool Game::checkIfValidPath()
 //--------------------------------------------------------------------------------
 void Game::writeFixMaze()
 {
-    for(int counter = 0; counter < getMazeHeight(); counter++)
+    for(int counter = 0; counter < check_map_.size(); counter++)
     {
         std::vector<char> buffer = check_map_.at(counter);
         std::vector<char> bufferIn;
@@ -541,6 +493,8 @@ void Game::writeFixMaze()
         
         fix_game_map_.push_back(bufferIn);
     }
+    
+    check_map_.clear();
 }
 
 //--------------------------------------------------------------------------------
@@ -548,13 +502,13 @@ void Game::showMaze(std::string parameter)
 {
     if(parameter == "noMore")
     {
-        for(int counter = 0; counter < getMazeHeight(); counter++)
+        for(int counter = 0; counter < fix_game_map_.size(); counter++)
         {
             std::vector<char> buffer = fix_game_map_.at(counter);
             
             for(int counter2 = 0; counter2 < buffer.size(); counter2++)
             {
-                if(counter == getCurrentPositionX() && counter2 == getCurrentPositionY())
+                if(counter == current_position_x_ && counter2 == current_position_y_)
                 {
                     std::cout << "*";
                 }
@@ -569,16 +523,16 @@ void Game::showMaze(std::string parameter)
     }
     else {
         
-        std::cout << "Remaining Steps: " << getCurrentSteps() << std::endl;
-        std::cout << "Moved Steps: " << getInputMoves() << std::endl;
+        std::cout << "Remaining Steps: " << current_steps_ << std::endl;
+        std::cout << "Moved Steps: " << input_moves_ << std::endl;
         
-        for(int counter = 0; counter < getMazeHeight(); counter++)
+        for(int counter = 0; counter < fix_game_map_.size(); counter++)
         {
             std::vector<char> buffer = fix_game_map_.at(counter);
             
             for(int counter2 = 0; counter2 < buffer.size(); counter2++)
             {
-                if(counter == getCurrentPositionX() && counter2 == getCurrentPositionY())
+                if(counter == current_position_x_ && counter2 == current_position_y_)
                 {
                     std::cout << "*";
                 }
@@ -647,6 +601,67 @@ std::pair<int, int>Game::searchSecondPosition(int firstCount, int secondCount, c
 }
 
 //--------------------------------------------------------------------------------
+void Game::makeMoveInDirection(std::string direction)
+{
+    if(checkValidMove(direction))
+    {
+        std::cout << "We can make a move in this direction: " << direction << std::endl;
+    }
+    else
+    {
+        std::cout << "Invalid move." << std::endl;
+    }
+    
+}
+
+//--------------------------------------------------------------------------------
+bool Game::checkValidMove(std::string orientation)
+{
+    if(orientation == "down")
+    {
+        //std::cout << fix_game_map_.at(current_position_x_ + 1).at(current_position_y_) << std::endl;
+        if(fix_game_map_.at(current_position_x_ + 1).at(current_position_y_) != '#')
+        {
+            return true;
+        }
+    }
+    else if(orientation == "up")
+    {
+         //std::cout << fix_game_map_.at(current_position_x_ - 1).at(current_position_y_) << std::endl;
+        if(fix_game_map_.at(current_position_x_ - 1).at(current_position_y_) != '#')
+        {
+            return true;
+        }
+        
+    }
+    else if(orientation == "left")
+    {
+         //std::cout << fix_game_map_.at(current_position_x_).at(current_position_y_ - 1) << std::endl;
+        if(fix_game_map_.at(current_position_x_).at(current_position_y_ - 1) != '#')
+        {
+            return true;
+        }
+    }
+    else
+    {
+         //std::cout << fix_game_map_.at(current_position_x_).at(current_position_y_ + 1) << std::endl;
+        if(fix_game_map_.at(current_position_x_).at(current_position_y_ + 1) != '#')
+        {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+//--------------------------------------------------------------------------------
+void Game::resetTheMaze()
+{
+    input_moves_ = "";
+    current_position_x_ = start_position_x_;
+    current_position_y_ = start_position_y_;
+    current_steps_ = maximum_steps_;
+}
 
 
 

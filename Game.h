@@ -34,6 +34,9 @@ private:
     std::map<char, std::pair<std::pair<int, int>, std::pair<int, int>>> all_teleports_map_;
     
     std::string input_moves_;
+    std::string save_file_name_;
+    
+    
     int maximum_steps_;
     int current_steps_;
     int start_position_x_;
@@ -42,6 +45,9 @@ private:
     int current_position_y_;
     int maze_width_;
     int maze_height_;
+    
+    bool save_mode_ = false;
+    bool load_mode_ = false;
     
     
     
@@ -64,31 +70,16 @@ public:
     //----------------------------------------------------------------------------
     // Getter Methods
     //
-    std::string getInputMoves();
-    int getMaximumSteps();
-    int getCurrentSteps();
-    int getStartPositionX();
-    int getStartPositionY();
-    int getCurrentPositionX();
-    int getCurrentPositionY();
-    int getMazeWidth();
-    int getMazeHeight();
-    //std::map<char, std::tuple<int, int, int, int>> getTeleportMap();
+    
     
     
     //----------------------------------------------------------------------------
     // Setter Methods
     //
-    void setInputMoves(std::string inputMoves);
-    void setMaximumSteps(int maximumSteps);
-    void setCurrentSteps(int currentSteps);
-    void setStartPositionX(int startPositionX);
-    void setStartPositionY(int startPositionY);
-    void setCurrentPositionX(int currentPositionX);
-    void setCurrentPositionY(int currentPositionY);
-    void setMazeWidth(int mazeWidth);
-    void setMazeHeight(int mazeHeight);
-    //void setAllTeleportsMap(std::map<char, std::tuple<int, int, int, int>> teleportMap);
+    
+    void setSaveMode(bool saveMode);
+    void setLoadMode(bool loadMode);
+    void setSaveFileName(std::string saveFileName);
     
     //----------------------------------------------------------------------------
     // Game::run() method
@@ -159,6 +150,13 @@ public:
     std::pair<int, int> searchSecondPosition(int firstCount, int secondCount, char searchChar);
     
     //---------------------------------------------------------------------------
+    void makeMoveInDirection(std::string direction);
+    
+    //---------------------------------------------------------------------------
+    bool checkValidMove(std::string orientation);
+    
+    //---------------------------------------------------------------------------
+    void resetTheMaze();
     
     
 };

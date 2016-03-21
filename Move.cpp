@@ -11,6 +11,7 @@
 //------------------------------------------------------------------------------
 
 #include "Move.h"
+#include "Game.h"
 
 //------------------------------------------------------------------------------
 Move::~Move()
@@ -29,7 +30,14 @@ int Move::execute(Game &board, std::vector<std::string> &params)
 {
     if (params.size() == 3)
     {
-        std::cout << "Move Befehl mit diesem Parameter: " << params[1] << std::endl;
+        if(params[1] == "down" || params[1] == "up" || params[1] == "right" || params[1] == "left")
+        {
+            board.makeMoveInDirection(params[1]);
+        }
+        else
+        {
+            std::cout << "Error: Wrong parameter." << std::endl;
+        }
     }
     else
     {

@@ -11,6 +11,8 @@
 //------------------------------------------------------------------------------
 
 #include <iostream>
+#include <string>
+
 #include "Game.h"
 #include "Quit.h"
 
@@ -31,14 +33,28 @@ int main(int argc, char **argv)
     
     if(argc == 3)
     {
-        std::cout << "Debug Mode - Überprüfung des zweiten Parameters" << std::endl;
-    
+        if (strcmp(argv[1], "-s") == 0)
+        {
+            pokemon.setSaveMode(true);
+            pokemon.setSaveFileName(argv[2]);
+            
+        }
+        else if (strcmp(argv[1], "-m") == 0)
+        {
+            pokemon.setLoadMode(true);
+            pokemon.loadFile(argv[2]);
+        }
+        else
+        {
+            std::cout << "Wrong usage: ./basic [-s <filename1>] [-m <filename2>]" << std::endl;
+            return 2;
+        }
     }
     
     if(argc == 5)
     {
-        std::cout << "Debug Mode - Alle Parameter wurden eingetragen" << std::endl;
-        
+        pokemon.setLoadMode(true);
+        pokemon.setSaveMode(true);
     }
     
     if(argc == 4 || argc == 2)

@@ -11,6 +11,7 @@
 //------------------------------------------------------------------------------
 
 #include "Reset.h"
+#include "Game.h"
 
 //------------------------------------------------------------------------------
 Reset::~Reset()
@@ -30,6 +31,8 @@ int Reset::execute(Game &board, std::vector<std::string> &params)
     if (params.size() == 2)
     {
         std::cout << "Reset Befehl." << std::endl;
+        board.resetTheMaze();
+        
     }
     else
     {
