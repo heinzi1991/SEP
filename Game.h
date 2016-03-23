@@ -160,6 +160,15 @@ public:
     void makeOneMove(std::string orientation);
     
     //---------------------------------------------------------------------------
+    void teleportThePlayer(char teleportField);
+    
+    //---------------------------------------------------------------------------
+    void reduceCurrentSteps(char reduceField);
+    
+    //---------------------------------------------------------------------------
+    void increaseCurrentSteps(char increaseField);
+    
+    //---------------------------------------------------------------------------
     void resetTheMaze();
     
     
