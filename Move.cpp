@@ -28,6 +28,14 @@ Move::Move(std::string name) : Command(name)
 //------------------------------------------------------------------------------
 int Move::execute(Game &board, std::vector<std::string> &params)
 {
+    if(board.getLoadMode() == false)
+    {
+        std::cout << "Error: No maze loaded." << std::endl;
+        return 1;
+    }
+    
+    
+    
     if (params.size() == 3)
     {
         if(params[1] == "down" || params[1] == "up" || params[1] == "right" || params[1] == "left")

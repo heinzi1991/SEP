@@ -11,6 +11,7 @@
 //------------------------------------------------------------------------------
 
 #include "Fastmove.h"
+#include "Game.h"
 
 //------------------------------------------------------------------------------
 Fastmove::~Fastmove()
@@ -27,6 +28,12 @@ Fastmove::Fastmove(std::string name) : Command(name)
 //------------------------------------------------------------------------------
 int Fastmove::execute(Game &board, std::vector<std::string> &params)
 {
+    if(board.getLoadMode() == false)
+    {
+        std::cout << "Error: No maze loaded." << std::endl;
+        return 1;
+    }
+    
     if (params.size() == 3)
     {
         std::cout << "Fastmove Befehl mit diesem Parameter: " << params[1] << std::endl;

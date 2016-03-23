@@ -47,6 +47,13 @@ Game::~Game()
     }*/
     
 }
+//------------------------------------------------------------------------------
+bool Game::getLoadMode()
+{
+    return load_mode_;
+}
+
+
 
 //------------------------------------------------------------------------------
 void Game::setLoadMode(bool loadMode)
@@ -116,15 +123,20 @@ void Game::run()
             }
             else
             {
-                if(load_mode_ == false && (splitted_input_[0] != "load" && splitted_input_[0] != "quit"))
+                state = possible_commands_[splitted_input_[0]] ->
+                execute(*this, splitted_input_);
+                
+                
+                /*if(load_mode_ == false && (splitted_input_[0] != "load" && splitted_input_[0] != "quit"))
                 {
+                    //TODO - make it in the commands
                     std::cout << "Error: No maze loaded." << std::endl;
                 }
                 else
                 {
                     state = possible_commands_[splitted_input_[0]] ->
                     execute(*this, splitted_input_);
-                }
+                }*/
             }
         }
     }
@@ -270,7 +282,7 @@ void Game::loadFile(std::string fileName)
             current_position_x_ = start_position_x_;
             current_position_y_ = start_position_y_;
             
-            if(load_mode_ == true)
+            if(load_mode_)
             {
                 fix_game_map_.clear();
             }
@@ -359,7 +371,9 @@ bool Game::checkIfValidMaze()
     int startFieldCounter = 0;
     int targetFieldCounter = 0;
     int tempLineCount = 0;
+    int fieldCounter = 1;
     std::map<char, int> teleportMap;
+    int fieldArray[] = {32, 35, 43, 60, 62, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 94, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 111, 118, 120};
     
     
     for(int counter = 0; counter < input_moves_.length(); counter++)
@@ -384,6 +398,30 @@ bool Game::checkIfValidMaze()
             return false;
         }
     }
+    
+    
+    for(int counter = 0; counter < check_map_.size(); counter++)
+    {
+        std::vector<char> buffer = check_map_.at(counter);
+        
+        for(int counter2 = 0; counter2 < buffer.size(); counter2++)
+        {
+            for(int counter3 = 0; counter3 < 44; counter3++)
+            {
+                if((int)buffer.at(counter2) == fieldArray[counter3])
+                {
+                    fieldCounter++;
+                }
+            }
+        }
+    }
+    
+    if(fieldCounter != (maze_height_ * maze_width_))
+    {
+        std::cout << "invalid field" << std::endl;
+        return false;
+    }
+
     
     for(int counter = 0; counter < check_map_.size(); counter++)
     {
@@ -603,9 +641,21 @@ std::pair<int, int>Game::searchSecondPosition(int firstCount, int secondCount, c
 //------------------------------------------------------------------------------
 void Game::makeMoveInDirection(std::string direction)
 {
+    std::map<std::string, char> shortDirectionMap;
+    
+    shortDirectionMap["down"] = 'd';
+    shortDirectionMap["up"] = 'u';
+    shortDirectionMap["left"] = 'l';
+    shortDirectionMap["right"] = 'r';
+    
+    
     if(checkValidMove(direction))
     {
         std::cout << "We can make a move in this direction: " << direction << std::endl;
+        makeOneMove(direction);
+        input_moves_.append(&shortDirectionMap[direction]);
+        current_steps_--;
+        showMaze("noMore");
     }
     else
     {
@@ -619,7 +669,6 @@ bool Game::checkValidMove(std::string orientation)
 {
     if(orientation == "down")
     {
-        //std::cout << fix_game_map_.at(current_position_x_ + 1).at(current_position_y_) << std::endl;
         if(fix_game_map_.at(current_position_x_ + 1).at(current_position_y_) != '#')
         {
             return true;
@@ -627,7 +676,6 @@ bool Game::checkValidMove(std::string orientation)
     }
     else if(orientation == "up")
     {
-         //std::cout << fix_game_map_.at(current_position_x_ - 1).at(current_position_y_) << std::endl;
         if(fix_game_map_.at(current_position_x_ - 1).at(current_position_y_) != '#')
         {
             return true;
@@ -636,7 +684,6 @@ bool Game::checkValidMove(std::string orientation)
     }
     else if(orientation == "left")
     {
-         //std::cout << fix_game_map_.at(current_position_x_).at(current_position_y_ - 1) << std::endl;
         if(fix_game_map_.at(current_position_x_).at(current_position_y_ - 1) != '#')
         {
             return true;
@@ -644,7 +691,6 @@ bool Game::checkValidMove(std::string orientation)
     }
     else
     {
-         //std::cout << fix_game_map_.at(current_position_x_).at(current_position_y_ + 1) << std::endl;
         if(fix_game_map_.at(current_position_x_).at(current_position_y_ + 1) != '#')
         {
             return true;
@@ -652,6 +698,59 @@ bool Game::checkValidMove(std::string orientation)
     }
     
     return false;
+}
+
+//------------------------------------------------------------------------------
+void Game::makeOneMove(std::string orientation)
+{
+    if(orientation == "down")
+    {
+        current_position_x_ = current_position_x_ + 1;
+        
+        if(fix_game_map_.at(current_position_x_).at(current_position_y_) == '+')
+        {
+            while (checkValidMove("down"))
+            {
+                makeOneMove(orientation);
+            }
+        }
+    }
+    else if(orientation == "up")
+    {
+        current_position_x_ = current_position_x_ - 1;
+        
+        if(fix_game_map_.at(current_position_x_).at(current_position_y_) == '+')
+        {
+            while (checkValidMove("up"))
+            {
+                makeOneMove(orientation);
+            }
+        }
+    }
+    else if(orientation == "left")
+    {
+        current_position_y_ = current_position_y_ - 1;
+        
+        if(fix_game_map_.at(current_position_x_).at(current_position_y_) == '+')
+        {
+            while (checkValidMove("left"))
+            {
+                makeOneMove(orientation);
+            }
+        }
+    }
+    else
+    {
+        current_position_y_ = current_position_y_ + 1;
+        
+        if(fix_game_map_.at(current_position_x_).at(current_position_y_) == '+')
+        {
+            while (checkValidMove("right"))
+            {
+                makeOneMove(orientation);
+            }
+        }
+    }
 }
 
 //------------------------------------------------------------------------------

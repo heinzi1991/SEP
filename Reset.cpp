@@ -28,6 +28,14 @@ Reset::Reset(std::string name) : Command(name)
 //------------------------------------------------------------------------------
 int Reset::execute(Game &board, std::vector<std::string> &params)
 {
+    if(board.getLoadMode() == false)
+    {
+        std::cout << "Error: No maze loaded." << std::endl;
+        return 1;
+    }
+    
+    
+    
     if (params.size() == 2)
     {
         std::cout << "Reset Befehl." << std::endl;

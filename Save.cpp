@@ -28,6 +28,12 @@ Save::Save(std::string name) : Command(name)
 //------------------------------------------------------------------------------
 int Save::execute(Game &board, std::vector<std::string> &params)
 {
+    if(board.getLoadMode() == false)
+    {
+        std::cout << "Error: No maze loaded." << std::endl;
+        return 1;
+    }
+    
     if (params.size() == 3)
     {
         //std::cout << "Save Befehl mit diesem Parameter: " << params[1] << std::endl;
