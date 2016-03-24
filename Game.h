@@ -45,9 +45,11 @@ private:
     int current_position_y_;
     int maze_width_;
     int maze_height_;
+    int fast_move_counter_ = 0;
     
     bool save_mode_ = false;
     bool load_mode_ = false;
+    bool fast_move_activeted_;
     
     
     
@@ -71,6 +73,7 @@ public:
     // Getter Methods
     //
     bool getLoadMode();
+    int getCurrentSteps();
     
     
     
@@ -81,6 +84,7 @@ public:
     void setSaveMode(bool saveMode);
     void setLoadMode(bool loadMode);
     void setSaveFileName(std::string saveFileName);
+    void setFastMove(bool fastMoveMode);
     
     //----------------------------------------------------------------------------
     // Game::run() method
@@ -154,6 +158,9 @@ public:
     void makeMoveInDirection(std::string direction);
     
     //---------------------------------------------------------------------------
+    void makeMoreMoves(std::string moves);
+    
+    //---------------------------------------------------------------------------
     bool checkValidMove(std::string orientation);
     
     //---------------------------------------------------------------------------
@@ -167,6 +174,9 @@ public:
     
     //---------------------------------------------------------------------------
     void increaseCurrentSteps(char increaseField);
+    
+    //---------------------------------------------------------------------------
+    bool checkOneWayField(std::string orientation);
     
     //---------------------------------------------------------------------------
     void resetTheMaze();

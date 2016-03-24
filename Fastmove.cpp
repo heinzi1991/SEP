@@ -36,7 +36,8 @@ int Fastmove::execute(Game &board, std::vector<std::string> &params)
     
     if (params.size() == 3)
     {
-        std::cout << "Fastmove Befehl mit diesem Parameter: " << params[1] << std::endl;
+        board.setFastMove(true);
+        board.makeMoreMoves(params[1]);
     }
     else
     {

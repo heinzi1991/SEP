@@ -52,6 +52,11 @@ bool Game::getLoadMode()
 {
     return load_mode_;
 }
+//------------------------------------------------------------------------------
+int Game::getCurrentSteps()
+{
+    return current_steps_;
+}
 
 
 
@@ -71,6 +76,11 @@ void Game::setSaveMode(bool saveMode)
 void Game::setSaveFileName(std::string saveFileName)
 {
     save_file_name_ = saveFileName;
+}
+
+void Game::setFastMove(bool fastMoveMode)
+{
+    fast_move_activeted_ = fastMoveMode;
 }
 
 
@@ -125,18 +135,6 @@ void Game::run()
             {
                 state = possible_commands_[splitted_input_[0]] ->
                 execute(*this, splitted_input_);
-                
-                
-                /*if(load_mode_ == false && (splitted_input_[0] != "load" && splitted_input_[0] != "quit"))
-                {
-                    //TODO - make it in the commands
-                    std::cout << "Error: No maze loaded." << std::endl;
-                }
-                else
-                {
-                    state = possible_commands_[splitted_input_[0]] ->
-                    execute(*this, splitted_input_);
-                }*/
             }
         }
     }
@@ -647,19 +645,61 @@ void Game::makeMoveInDirection(std::string direction)
     shortDirectionMap["left"] = 'l';
     shortDirectionMap["right"] = 'r';
     
+    if(checkOneWayField(direction) == false)
+    {
+        std::cout << "Invalid move. (onewayField)" << std::endl;
+        return;
+    }
     
     if(checkValidMove(direction))
     {
-        std::cout << "We can make a move in this direction: " << direction << std::endl;
         makeOneMove(direction);
-        input_moves_.append(&shortDirectionMap[direction]);
-        current_steps_--;
-        showMaze("noMore");
+        
+        if(fast_move_activeted_ == false)
+        {
+            input_moves_.append(&shortDirectionMap[direction]);
+            current_steps_--;
+            showMaze("noMore");
+        }
+        else
+        {
+            fast_move_counter_++;
+        }
     }
     else
     {
         std::cout << "Invalid move." << std::endl;
     }
+    
+}
+
+//------------------------------------------------------------------------------
+void Game::makeMoreMoves(std::string moves)
+{
+    std::map<char, std::string> directionMap;
+    
+    directionMap['d'] = "down";
+    directionMap['u'] = "up";
+    directionMap['l'] = "left";
+    directionMap['r'] = "right";
+    
+    
+    for(int counter = 0; counter < moves.length(); counter++)
+    {
+        makeMoveInDirection(directionMap[moves.at(counter)]);
+    }
+    
+    if(fast_move_counter_ == moves.length())
+    {
+        input_moves_ += moves;
+        current_steps_ = current_steps_ - (int)moves.length();
+        showMaze("noMore");
+    }
+    else
+    {
+        std::cout << "Error: Invalid move." << std::endl;
+    }
+    
     
 }
 
@@ -830,23 +870,53 @@ void Game::teleportThePlayer(char teleportField)
     
     if(current_position_x_ == firstField.first && current_position_y_ == firstField.second)
     {
-        
-        std::cout << "first if" << std::endl;
         current_position_x_ = secondField.first;
         current_position_y_ = secondField.second;
     }
     else if(current_position_x_ == secondField.first && current_position_y_ == secondField.second)
     {
-        std::cout << "second if" << std::endl;
-
         current_position_x_ = firstField.first;
         current_position_y_ = firstField.second;
     }
     else
     {
-        std::cout << "else" << std::endl;
         return;
     }
+}
+
+//------------------------------------------------------------------------------
+bool Game::checkOneWayField(std::string orientation)
+{
+    if(fix_game_map_.at(current_position_x_).at(current_position_y_) == '>')
+    {
+        if(orientation != "right")
+        {
+            return false;
+        }
+    }
+    else if(fix_game_map_.at(current_position_x_).at(current_position_y_) == '<')
+    {
+        if(orientation != "left")
+        {
+            return false;
+        }
+    }
+    else if(fix_game_map_.at(current_position_x_).at(current_position_y_) == 'v')
+    {
+        if(orientation != "down")
+        {
+            return false;
+        }
+    }
+    else if(fix_game_map_.at(current_position_x_).at(current_position_y_) == '^')
+    {
+        if(orientation != "up")
+        {
+            return false;
+        }
+    }
+    
+    return true;
 }
 
 //------------------------------------------------------------------------------
@@ -861,7 +931,15 @@ void Game::reduceCurrentSteps(char reduceField)
     reduceMap['j'] = 5;
     
     fix_game_map_.at(current_position_x_).at(current_position_y_) = ' ';
-    current_steps_ = current_steps_ - reduceMap[reduceField];
+    
+    if(current_steps_ - reduceMap[reduceField] < 0)
+    {
+        current_steps_ = 0;
+    }
+    else
+    {
+        current_steps_ = current_steps_ - reduceMap[reduceField];
+    }
 }
 
 //------------------------------------------------------------------------------
