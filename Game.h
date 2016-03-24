@@ -139,7 +139,7 @@ public:
     bool checkIfValidMaze();
     
     //---------------------------------------------------------------------------
-    bool checkIfValidPath();
+    bool checkIfValidPath(std::string inputMoves);
     
     //---------------------------------------------------------------------------
     void writeFixMaze();

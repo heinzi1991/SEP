@@ -268,25 +268,41 @@ void Game::loadFile(std::string fileName)
     
     if(checkIfValidMaze())
     {
-        if(checkIfValidPath())
+        if(fix_game_map_.size() == 0)
         {
             load_mode_ = true;
-            current_steps_ = maximum_steps_ - (int)input_moves_.length();
-            current_position_x_ = start_position_x_;
-            current_position_y_ = start_position_y_;
-            
-            if(load_mode_)
-            {
-                fix_game_map_.clear();
-            }
-            
             writeFixMaze();
-            saveAllTeleports();
-            showMaze("noMore");
         }
         else
         {
-            std::cout << "Error: Invalid path." << std::endl;
+            fix_game_map_.clear();
+            load_mode_ = true;
+            writeFixMaze();
+        }
+        
+        current_steps_ = maximum_steps_;
+        current_position_x_ = start_position_x_;
+        current_position_y_ = start_position_y_;
+        
+        saveAllTeleports();
+        
+        if(input_moves_.length() > 0)
+        {
+            if(checkIfValidPath(input_moves_))
+            {
+                current_steps_ = maximum_steps_ - (int)input_moves_.length();
+                showMaze("noMore");
+            }
+            else
+            {
+                load_mode_ = false;
+                fix_game_map_.clear();
+                std::cout << "Error: Invalid path." << std::endl;
+            }
+        }
+        else
+        {
+            showMaze("noMore");
         }
     }
     else
@@ -501,9 +517,26 @@ bool Game::checkIfValidMaze()
 }
 
 //------------------------------------------------------------------------------
-bool Game::checkIfValidPath()
+bool Game::checkIfValidPath(std::string inputMoves)
 {
-    //TODO - no plan today
+    fast_move_activeted_ = true;
+    std::map<char, std::string> directionMap;
+    
+    directionMap['d'] = "down";
+    directionMap['u'] = "up";
+    directionMap['l'] = "left";
+    directionMap['r'] = "right";
+    
+    
+    for(int counter = 0; counter < input_moves_.length(); counter++)
+    {
+        makeMoveInDirection(directionMap[input_moves_.at(counter)]);
+    }
+    
+    if(fast_move_counter_ != input_moves_.length())
+    {
+        return false;
+    }
     
     return true;
 }
@@ -640,12 +673,12 @@ void Game::makeMoveInDirection(std::string direction)
     shortDirectionMap["left"] = 'l';
     shortDirectionMap["right"] = 'r';
     
-    if(current_steps_ == 0)
+    /*if(current_steps_ == 0)
     {
         std::cout << "Error: No more steps possible." << std::endl;
         resetTheMaze();
         return;
-    }
+    }*/
     
     
     if(checkOneWayField(direction) == false)
@@ -654,13 +687,14 @@ void Game::makeMoveInDirection(std::string direction)
         return;
     }
     
+    
     if(checkValidMove(direction))
     {
         makeOneMove(direction);
         
         if(fast_move_activeted_ == false)
         {
-            input_moves_.append(&shortDirectionMap[direction]);
+            input_moves_ += shortDirectionMap[direction];
             current_steps_--;
             showMaze("noMore");
         }
@@ -671,7 +705,10 @@ void Game::makeMoveInDirection(std::string direction)
     }
     else
     {
-        std::cout << "Invalid move." << std::endl;
+        if(fast_move_activeted_ == false)
+        {
+            std::cout << "Invalid move." << std::endl;
+        }
     }
     
 }
@@ -686,6 +723,9 @@ void Game::makeMoreMoves(std::string moves)
     directionMap['l'] = "left";
     directionMap['r'] = "right";
     
+    int tempX = current_position_x_;
+    int tempY = current_position_y_;
+    
     
     for(int counter = 0; counter < moves.length(); counter++)
     {
@@ -697,9 +737,13 @@ void Game::makeMoreMoves(std::string moves)
         input_moves_ += moves;
         current_steps_ = current_steps_ - (int)moves.length();
         showMaze("noMore");
+        fast_move_counter_ = 0;
     }
     else
     {
+        current_position_x_ = tempX;
+        current_position_y_ = tempY;
+        
         std::cout << "Error: Invalid move." << std::endl;
     }
     
