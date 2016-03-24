@@ -73,7 +73,6 @@ public:
     // Getter Methods
     //
     bool getLoadMode();
-    int getCurrentSteps();
     
     
     

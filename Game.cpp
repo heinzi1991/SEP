@@ -52,11 +52,6 @@ bool Game::getLoadMode()
 {
     return load_mode_;
 }
-//------------------------------------------------------------------------------
-int Game::getCurrentSteps()
-{
-    return current_steps_;
-}
 
 
 
@@ -644,6 +639,14 @@ void Game::makeMoveInDirection(std::string direction)
     shortDirectionMap["up"] = 'u';
     shortDirectionMap["left"] = 'l';
     shortDirectionMap["right"] = 'r';
+    
+    if(current_steps_ == 0)
+    {
+        std::cout << "Error: No more steps possible." << std::endl;
+        resetTheMaze();
+        return;
+    }
+    
     
     if(checkOneWayField(direction) == false)
     {
