@@ -1,22 +1,19 @@
 //------------------------------------------------------------------------------
-// Filename:		Command.h
-// Description:     Class representing a general command
+// Filename:		mian.cpp
+// Description:     The main class. Check if every command parameter is right
 // Authors:         Karim Koutp             (1314710)
 //					Tina Promitzer			(1311885)
 //					Martin Zagar			(1131246)
-// Tutor:			Christoph Hack
-// Group:			2
-// Created:			27.03.2015
-// Last change:     27.03.2015
+// Tutor:			Christoph Maurer
+// Group:			6
+// Created:			18.03.2016
+// Last change:     25.03.2016
 //------------------------------------------------------------------------------
 
 #include <iostream>
 #include <string>
 
 #include "Game.h"
-#include "Quit.h"
-
-
 
 //------------------------------------------------------------------------------
 // main function
@@ -29,7 +26,6 @@
 int main(int argc, char **argv)
 {
     Game pokemon;
-    
     
     if(argc == 3)
     {
@@ -55,6 +51,19 @@ int main(int argc, char **argv)
     {
         pokemon.setLoadMode(true);
         pokemon.setSaveMode(true);
+        
+        if ((std::string)argv[1] == "-s")
+        {
+            pokemon.setSaveFileName(argv[2]);
+            pokemon.loadFile(argv[4]);
+            pokemon.saveFile(argv[2]);
+        }
+        else if((std::string)argv[1] == "-m")
+        {
+            pokemon.setSaveFileName(argv[4]);
+            pokemon.loadFile(argv[2]);
+            pokemon.saveFile(argv[4]);
+        }
     }
     
     if(argc == 4 || argc == 2)

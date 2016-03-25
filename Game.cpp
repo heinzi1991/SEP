@@ -1,13 +1,13 @@
 //------------------------------------------------------------------------------
-// Filename:		Command.h
-// Description:     Class representing a general command
+// Filename:		Game.cpp
+// Description:     This class is the brain of the game. Every function is here.
 // Authors:         Karim Koutp             (1314710)
 //					Tina Promitzer			(1311885)
 //					Martin Zagar			(1131246)
-// Tutor:			Christoph Hack
-// Group:			2
-// Created:			27.03.2015
-// Last change:     27.03.2015
+// Tutor:			Christoph Maurer
+// Group:			6
+// Created:			18.03.2016
+// Last change:     25.03.2015
 //------------------------------------------------------------------------------
 
 #include <iostream>
@@ -26,8 +26,6 @@
 #include "Show.h"
 #include "Reset.h"
 #include "Quit.h"
-
-///Users/martinzagar/Dropbox/SEP/test.txt
 
 
 //------------------------------------------------------------------------------
@@ -52,6 +50,19 @@ bool Game::getLoadMode()
 {
     return load_mode_;
 }
+
+//------------------------------------------------------------------------------
+bool Game::getFinishMaze()
+{
+    return finish_maze_;
+}
+
+//------------------------------------------------------------------------------
+int Game::getCurrentSteps()
+{
+    return current_steps_;
+}
+
 
 
 
@@ -280,7 +291,7 @@ void Game::loadFile(std::string fileName)
             writeFixMaze();
         }
         
-        current_steps_ = maximum_steps_;
+        current_steps_ = maximum_steps_ - 1;
         current_position_x_ = start_position_x_;
         current_position_y_ = start_position_y_;
         
@@ -290,7 +301,7 @@ void Game::loadFile(std::string fileName)
         {
             if(checkIfValidPath(input_moves_))
             {
-                current_steps_ = maximum_steps_ - (int)input_moves_.length();
+                current_steps_ = maximum_steps_ - (int)input_moves_.length() - 1;
                 showMaze("noMore");
             }
             else
@@ -389,7 +400,7 @@ bool Game::checkIfValidMaze()
     {
         if(input_moves_.at(counter) != 'u' && input_moves_.at(counter) != 'd' && input_moves_.at(counter) != 'l' && input_moves_.at(counter) != 'r')
         {
-            std::cout << "wrong short moves" << std::endl;
+            std::cout << "DEBUG: wrong short moves" << std::endl;
             return false;
         }
     }
@@ -403,7 +414,7 @@ bool Game::checkIfValidMaze()
         
         if(tempLineCount > (int)check_map_.at(counter).size() || tempLineCount < (int)check_map_.at(counter).size())
         {
-            std::cout << "lines different size" << std::endl;
+            std::cout << "DEBUG: lines different size" << std::endl;
             return false;
         }
     }
@@ -426,7 +437,7 @@ bool Game::checkIfValidMaze()
     
     if(fieldCounter != (maze_height_ * maze_width_))
     {
-        std::cout << "invalid field" << std::endl;
+        std::cout << "DEBUG: invalid field" << std::endl;
         return false;
     }
 
@@ -447,7 +458,7 @@ bool Game::checkIfValidMaze()
                 }
                 else
                 {
-                    std::cout << "more startfields" << std::endl;
+                    std::cout << "DEBUG: more startfields" << std::endl;
                     return false;
                 }
             }
@@ -456,11 +467,13 @@ bool Game::checkIfValidMaze()
             {
                 if(targetFieldCounter == 0)
                 {
+                    target_position_x_ = counter;
+                    target_position_y_ = counter2;
                     targetFieldCounter++;
                 }
                 else
                 {
-                    std::cout << "more targetfields" << std::endl;
+                    std::cout << "DEBUG: more targetfields" << std::endl;
                     return false;
                 }
             }
@@ -476,7 +489,7 @@ bool Game::checkIfValidMaze()
     {
         if(it -> second != 2)
         {
-            std::cout << "not 2 teleports" << std::endl;
+            std::cout << "DEBUG: not 2 teleports" << std::endl;
             return false;
         }
     }
@@ -488,7 +501,7 @@ bool Game::checkIfValidMaze()
     {
         if(*it != '#')
         {
-            std::cout << "first row no hashtag" << std::endl;
+            std::cout << "DEBUG: first row no hashtag" << std::endl;
             return false;
         }
     }
@@ -497,7 +510,7 @@ bool Game::checkIfValidMaze()
     {
         if(*it != '#')
         {
-            std::cout << "last row no hashtag" << std::endl;
+            std::cout << "DEBUG: last row no hashtag" << std::endl;
             return false;
         }
     }
@@ -508,7 +521,7 @@ bool Game::checkIfValidMaze()
         
         if(buffer.at(0) != '#' || buffer.at(buffer.size() - 1) != '#')
         {
-            std::cout << "left and right no hashtag" << std::endl;
+            std::cout << "DEBUG: left and right no hashtag" << std::endl;
             return false;
         }
     }
@@ -530,8 +543,15 @@ bool Game::checkIfValidPath(std::string inputMoves)
     
     for(int counter = 0; counter < input_moves_.length(); counter++)
     {
+        if(counter == (input_moves_.length() - 1))
+        {
+            last_move_of_series = true;
+        }
+        
         makeMoveInDirection(directionMap[input_moves_.at(counter)]);
     }
+    
+    last_move_of_series = false;
     
     if(fast_move_counter_ != input_moves_.length())
     {
@@ -683,7 +703,7 @@ void Game::makeMoveInDirection(std::string direction)
     
     if(checkOneWayField(direction) == false)
     {
-        std::cout << "Invalid move. (onewayField)" << std::endl;
+        std::cout << "DEBUG: Invalid move. (onewayField)" << std::endl;
         return;
     }
     
@@ -692,10 +712,17 @@ void Game::makeMoveInDirection(std::string direction)
     {
         makeOneMove(direction);
         
-        if(fast_move_activeted_ == false)
+        if(fast_move_activeted_ == false && finish_maze_ == false)
         {
             input_moves_ += shortDirectionMap[direction];
             current_steps_--;
+            
+            if(save_mode_)
+            {
+                saveFile(save_file_name_);
+
+            }
+            
             showMaze("noMore");
         }
         else
@@ -707,7 +734,7 @@ void Game::makeMoveInDirection(std::string direction)
     {
         if(fast_move_activeted_ == false)
         {
-            std::cout << "Invalid move." << std::endl;
+            std::cout << "Error: Invalid move." << std::endl;
         }
     }
     
@@ -729,13 +756,27 @@ void Game::makeMoreMoves(std::string moves)
     
     for(int counter = 0; counter < moves.length(); counter++)
     {
+        if(counter == (moves.length() - 1))
+        {
+            last_move_of_series = true;
+        }
+        
         makeMoveInDirection(directionMap[moves.at(counter)]);
     }
+    
+    last_move_of_series = false;
     
     if(fast_move_counter_ == moves.length())
     {
         input_moves_ += moves;
         current_steps_ = current_steps_ - (int)moves.length();
+        
+        if(save_mode_)
+        {
+            saveFile(save_file_name_);
+
+        }
+        
         showMaze("noMore");
         fast_move_counter_ = 0;
     }
@@ -816,6 +857,23 @@ void Game::makeOneMove(std::string orientation)
         {
             reduceCurrentSteps(fix_game_map_.at(current_position_x_).at(current_position_y_));
         }
+        
+        if(fast_move_activeted_ == false)
+         {
+            if(fix_game_map_.at(current_position_x_).at(current_position_y_) == 'x')
+            {
+                makeWin('d');
+                return;
+            }
+         }
+         else
+         {
+            if(fix_game_map_.at(current_position_x_).at(current_position_y_) == 'x' && last_move_of_series == true)
+            {
+                makeWin('d');
+                return;
+            }
+         }
     }
     else if(orientation == "up")
     {
@@ -844,6 +902,24 @@ void Game::makeOneMove(std::string orientation)
         {
             reduceCurrentSteps(fix_game_map_.at(current_position_x_).at(current_position_y_));
         }
+        
+        if(fast_move_activeted_ == false)
+        {
+            if(fix_game_map_.at(current_position_x_).at(current_position_y_) == 'x')
+            {
+                makeWin('u');
+                return;
+            }
+        }
+        else
+        {
+            if(fix_game_map_.at(current_position_x_).at(current_position_y_) == 'x' && last_move_of_series == true)
+            {
+                makeWin('u');
+                return;
+            }
+        }
+
     }
     else if(orientation == "left")
     {
@@ -872,6 +948,24 @@ void Game::makeOneMove(std::string orientation)
         {
             reduceCurrentSteps(fix_game_map_.at(current_position_x_).at(current_position_y_));
         }
+        
+        if(fast_move_activeted_ == false)
+        {
+            if(fix_game_map_.at(current_position_x_).at(current_position_y_) == 'x')
+            {
+                makeWin('l');
+                return;
+            }
+        }
+        else
+        {
+            if(fix_game_map_.at(current_position_x_).at(current_position_y_) == 'x' && last_move_of_series == true)
+            {
+                makeWin('l');
+                return;
+            }
+        }
+
     }
     else
     {
@@ -900,6 +994,24 @@ void Game::makeOneMove(std::string orientation)
         {
             reduceCurrentSteps(fix_game_map_.at(current_position_x_).at(current_position_y_));
         }
+        
+        if(fast_move_activeted_ == false)
+        {
+            if(fix_game_map_.at(current_position_x_).at(current_position_y_) == 'x')
+            {
+                makeWin('r');
+                return;
+            }
+        }
+        else
+        {
+            if(fix_game_map_.at(current_position_x_).at(current_position_y_) == 'x' && last_move_of_series == true)
+            {
+                makeWin('r');
+                return;
+            }
+        }
+
     }
 }
 
@@ -1002,6 +1114,22 @@ void Game::increaseCurrentSteps(char increaseField)
     
     fix_game_map_.at(current_position_x_).at(current_position_y_) = ' ';
     current_steps_ = current_steps_ + increaseMap[increaseField];
+}
+
+//------------------------------------------------------------------------------
+void Game::makeWin(char direction)
+{
+    finish_maze_ = true;
+    input_moves_ += direction;
+    
+    if(save_mode_)
+    {
+        saveFile(save_file_name_);
+    }
+    
+    current_position_x_ = target_position_x_;
+    current_position_y_ = target_position_y_;
+    std::cout << "Congratulation! You solved the maze." << std::endl;
 }
 
 //------------------------------------------------------------------------------

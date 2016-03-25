@@ -1,13 +1,13 @@
 //------------------------------------------------------------------------------
-// Filename:		Command.h
+// Filename:		Fastmove.cpp
 // Description:     Class representing a general command
 // Authors:         Karim Koutp             (1314710)
 //					Tina Promitzer			(1311885)
 //					Martin Zagar			(1131246)
-// Tutor:			Christoph Hack
-// Group:			2
-// Created:			27.03.2015
-// Last change:     27.03.2015
+// Tutor:			Christoph Maurer
+// Group:			6
+// Created:			18.03.2016
+// Last change:     25.03.2016
 //------------------------------------------------------------------------------
 
 #include "Fastmove.h"
@@ -31,6 +31,19 @@ int Fastmove::execute(Game &board, std::vector<std::string> &params)
     if(board.getLoadMode() == false)
     {
         std::cout << "Error: No maze loaded." << std::endl;
+        return 1;
+    }
+    
+    if(board.getCurrentSteps() - (int)params[1].length() < 0)
+    {
+        std::cout << "Error: No more steps possible." << std::endl;
+        board.resetTheMaze();
+        return 1;
+    }
+    
+    
+    if(board.getLoadMode())
+    {
         return 1;
     }
     

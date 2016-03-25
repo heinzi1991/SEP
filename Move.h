@@ -1,13 +1,13 @@
 //------------------------------------------------------------------------------
-// Filename:		Command.h
+// Filename:		Move.h
 // Description:     Class representing a general command
 // Authors:         Karim Koutp             (1314710)
 //					Tina Promitzer			(1311885)
 //					Martin Zagar			(1131246)
-// Tutor:			Christoph Hack
-// Group:			2
-// Created:			27.03.2015
-// Last change:     27.03.2015
+// Tutor:			Christoph Maurer
+// Group:			6
+// Created:			18.03.2016
+// Last change:     25.03.2016
 //------------------------------------------------------------------------------
 
 #ifndef MOVE_H
