@@ -291,7 +291,7 @@ void Game::loadFile(std::string fileName)
             writeFixMaze();
         }
         
-        current_steps_ = maximum_steps_ - 1;
+        current_steps_ = maximum_steps_;
         current_position_x_ = start_position_x_;
         current_position_y_ = start_position_y_;
         
@@ -301,7 +301,8 @@ void Game::loadFile(std::string fileName)
         {
             if(checkIfValidPath(input_moves_))
             {
-                current_steps_ = maximum_steps_ - (int)input_moves_.length() - 1;
+                current_steps_ = maximum_steps_ - (int)input_moves_.length();
+                fast_move_counter_ = 0;
                 showMaze("noMore");
             }
             else
@@ -734,7 +735,7 @@ void Game::makeMoveInDirection(std::string direction)
     {
         if(fast_move_activeted_ == false)
         {
-            std::cout << "Error: Invalid move." << std::endl;
+            std::cout << "Error: Invalid move MAKEMOVE." << std::endl;
         }
     }
     
@@ -744,7 +745,7 @@ void Game::makeMoveInDirection(std::string direction)
 void Game::makeMoreMoves(std::string moves)
 {
     std::map<char, std::string> directionMap;
-    
+        
     directionMap['d'] = "down";
     directionMap['u'] = "up";
     directionMap['l'] = "left";
@@ -785,7 +786,7 @@ void Game::makeMoreMoves(std::string moves)
         current_position_x_ = tempX;
         current_position_y_ = tempY;
         
-        std::cout << "Error: Invalid move." << std::endl;
+        std::cout << "Error: Invalid move MAKEMORE." << std::endl;
     }
     
     
@@ -1139,4 +1140,9 @@ void Game::resetTheMaze()
     current_position_x_ = start_position_x_;
     current_position_y_ = start_position_y_;
     current_steps_ = maximum_steps_;
+    
+    if(save_mode_)
+    {
+        saveFile(save_file_name_);
+    }
 }

@@ -41,12 +41,6 @@ int Fastmove::execute(Game &board, std::vector<std::string> &params)
         return 1;
     }
     
-    
-    if(board.getLoadMode())
-    {
-        return 1;
-    }
-    
     if (params.size() == 3)
     {
         board.setFastMove(true);
