@@ -36,7 +36,7 @@ int Fastmove::execute(Game &board, std::vector<std::string> &params)
     
     if(board.getCurrentSteps() - (int)params[1].length() < 0)
     {
-        std::cout << "Error: No more steps possible." << std::endl;
+        std::cout << "Error: Invalid move." << std::endl;
         board.resetTheMaze();
         return 1;
     }
