@@ -694,13 +694,10 @@ void Game::makeMoveInDirection(std::string direction)
     shortDirectionMap["left"] = 'l';
     shortDirectionMap["right"] = 'r';
     
-    /*if(current_steps_ == 0)
+    if(finish_maze_)
     {
-        std::cout << "Error: No more steps possible." << std::endl;
-        resetTheMaze();
         return;
-    }*/
-    
+    }
     
     if(checkOneWayField(direction) == false)
     {
@@ -724,7 +721,10 @@ void Game::makeMoveInDirection(std::string direction)
 
             }
             
-            showMaze("noMore");
+            if(finish_maze_ == false)
+            {
+                showMaze("noMore");
+            }
         }
         else
         {
@@ -735,7 +735,7 @@ void Game::makeMoveInDirection(std::string direction)
     {
         if(fast_move_activeted_ == false)
         {
-            std::cout << "Error: Invalid move MAKEMOVE." << std::endl;
+            std::cout << "Error: Invalid move." << std::endl;
         }
     }
     
@@ -750,6 +750,11 @@ void Game::makeMoreMoves(std::string moves)
     directionMap['u'] = "up";
     directionMap['l'] = "left";
     directionMap['r'] = "right";
+    
+    if(finish_maze_)
+    {
+        return;
+    }
     
     int tempX = current_position_x_;
     int tempY = current_position_y_;
@@ -786,7 +791,7 @@ void Game::makeMoreMoves(std::string moves)
         current_position_x_ = tempX;
         current_position_y_ = tempY;
         
-        std::cout << "Error: Invalid move MAKEMORE." << std::endl;
+        std::cout << "Error: Invalid move." << std::endl;
     }
     
     
@@ -1130,6 +1135,7 @@ void Game::makeWin(char direction)
     
     current_position_x_ = target_position_x_;
     current_position_y_ = target_position_y_;
+    showMaze("noMore");
     std::cout << "Congratulation! You solved the maze." << std::endl;
 }
 
