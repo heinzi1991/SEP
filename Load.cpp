@@ -30,6 +30,7 @@ int Load::execute(Game &board, std::vector<std::string> &params)
 {
     if (params.size() == 3)
     {
+        
         board.loadFile(params[1]);
     }
     else

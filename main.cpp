@@ -42,7 +42,8 @@ int main(int argc, char **argv)
         }
         else
         {
-            std::cout << "Wrong usage: ./basic [-s <filename1>] [-m <filename2>]" << std::endl;
+            std::cout << "Wrong usage: ./basic [-s <filename1>] [-m <filename2>]"
+            << std::endl;
             return 2;
         }
     }
@@ -68,7 +69,8 @@ int main(int argc, char **argv)
     
     if(argc == 4 || argc == 2)
     {
-        std::cout << "Wrong usage: ./basic [-s <filename1>] [-m <filename2>]" << std::endl;
+        std::cout << "Wrong usage: ./basic [-s <filename1>] [-m <filename2>]"
+        << std::endl;
         return 2;
     }
     

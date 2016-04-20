@@ -43,7 +43,8 @@ int Move::execute(Game &board, std::vector<std::string> &params)
     
     if (params.size() == 3)
     {
-        if(params[1] == "down" || params[1] == "up" || params[1] == "right" || params[1] == "left")
+        if(params[1] == "down" || params[1] == "up" || params[1] == "right"
+           || params[1] == "left")
         {
             board.setFastMove(false);
             board.makeMoveInDirection(params[1]);

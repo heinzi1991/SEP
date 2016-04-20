@@ -27,7 +27,8 @@ private:
     std::map<std::string, Command*> possible_commands_;
     std::vector<std::vector<char>> check_map_;
     std::vector<std::vector<char>> fix_game_map_;
-    std::map<char, std::pair<std::pair<int, int>, std::pair<int, int>>> all_teleports_map_;
+    std::map<char, std::pair<std::pair<int, int>, std::pair<int, int>>>
+    all_teleports_map_;
     
     std::string input_moves_;
     std::string save_file_name_;
@@ -51,28 +52,28 @@ private:
     bool last_move_of_series = false;
     
 public:
-    //----------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Game::Game() constructor
     // @param none
     // @return none
     //
     Game();
     
-    //----------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Game::Game() destructor
     // @param none
     // @return none
     //
     ~Game();
     
-    //----------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Getter Methods
     //
     bool getLoadMode();
     bool getFinishMaze();
     int getCurrentSteps();
     
-    //----------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Setter Methods
     //
     
@@ -81,7 +82,7 @@ public:
     void setSaveFileName(std::string saveFileName);
     void setFastMove(bool fastMoveMode);
     
-    //----------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Game::run() method
     // Keeps basic program functions on while the game is running.
     // Checks for false user input.
@@ -90,7 +91,7 @@ public:
     //
     void run();
     
-    //----------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     //Game::deleteCommands() method
     //
     //
@@ -99,7 +100,7 @@ public:
     //
     void deleteCommands();
     
-    //----------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Game::initCommands() method
     // Handles user input commands
     // @param none
@@ -107,7 +108,7 @@ public:
     //
     void initCommands();
     
-    //----------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Game::toLower(std::string word) method
     // Handles uppercase / lowercase string input
     // @param std::string word
@@ -115,14 +116,14 @@ public:
     //
     std::string toLower(std::string word);
     
-    //----------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Game::splitCommand(std::string s) method
     // @param std::string s
     // @return std::string result
     //
     std::vector<std::string>splitCommand(std::string s);
     
-    //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Game::loadFile(std::string fileName) method
     //
     // @param std::string fileName
@@ -130,7 +131,7 @@ public:
     //
     void loadFile(std::string fileName);
     
-    //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Game::saveFile(std::string fileName) method
     //
     // @param std::string fileName
@@ -138,7 +139,7 @@ public:
     //
     void saveFile(std::string fileName);
     
-    //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Game::writeToCheckMap(std::string oneLine, int lineNumber) method
     //
     // @param std::string
@@ -147,7 +148,7 @@ public:
     //
     void writeToCheckMap(std::string oneLine, int lineNumber);
     
-    //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Game::checkIfValidMaze() method
     //
     // @param none
@@ -155,7 +156,7 @@ public:
     //
     bool checkIfValidMaze();
     
-    //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Game::checkIfValidPath(std::string inputMoves) method
     //
     // @param std::string inputMoves
@@ -163,7 +164,7 @@ public:
     //
     bool checkIfValidPath(std::string inputMoves);
     
-    //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Game::writeFixMaze() method
     //
     // @param none
@@ -171,7 +172,7 @@ public:
     //
     void writeFixMaze();
     
-    //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Game::showMaze(std::string parameter) method
     //
     // @param std::string parameter
@@ -179,7 +180,7 @@ public:
     //
     void showMaze(std::string parameter);
     
-    //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Game::saveAllTeleports() method
     //
     // @param none
@@ -187,17 +188,19 @@ public:
     //
     void saveAllTeleports();
     
-    //---------------------------------------------------------------------------
-    // Game::searchSecondPostion(int firstCount, int secondCount, char searchChar) method
+    //--------------------------------------------------------------------------
+    // Game::searchSecondPostion(int firstCount, int secondCount,
+    //                           char searchChar) method
     //
     // @param int firstCount
     // @param int secondCount
     // @param char searchChar
     // @return std::pair<int, int>
     //
-    std::pair<int, int> searchSecondPosition(int firstCount, int secondCount, char searchChar);
+    std::pair<int, int> searchSecondPosition(int firstCount, int secondCount,
+                                             char searchChar);
     
-    //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Game::makeMoveInDirection(std::string direction) method
     //
     // @param std::string direction
@@ -205,7 +208,7 @@ public:
     //
     void makeMoveInDirection(std::string direction);
     
-    //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Game::makeMoreMoves(std::string moves) method
     //
     // @param std::string moves
@@ -213,7 +216,7 @@ public:
     //
     void makeMoreMoves(std::string moves);
     
-    //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Game::checkValidMoves(std::string orientation) method
     //
     // @param std::string orientation
@@ -221,7 +224,7 @@ public:
     //
     bool checkValidMove(std::string orientation);
     
-    //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Game::makeOneMove(std::string orientation) method
     //
     // @param std::string orientation
@@ -229,7 +232,7 @@ public:
     //
     void makeOneMove(std::string orientation);
     
-    //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Game::teleportThePlayer(char teleportField) method
     //
     // @param char teleportField
@@ -237,7 +240,7 @@ public:
     //
     void teleportThePlayer(char teleportField);
     
-    //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Game::reduceCurrentSteps(char reduceField) method
     //
     // @param char reduceField
@@ -245,7 +248,7 @@ public:
     //
     void reduceCurrentSteps(char reduceField);
     
-    //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Game::increaseCurrentSteps(char increaseField) method
     //
     // @param char increaseField
@@ -253,7 +256,7 @@ public:
     //
     void increaseCurrentSteps(char increaseField);
     
-    //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Game::checkOneWayField(std::string orientation) method
     //
     // @param std::string orientation
@@ -261,7 +264,7 @@ public:
     //
     bool checkOneWayField(std::string orientation);
     
-    //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Game::makeWin(char direction) method
     //
     // @param char direction
@@ -269,7 +272,7 @@ public:
     //
     void makeWin(char direction);
     
-    //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Game::resetTheMaze() method
     //
     // @param none

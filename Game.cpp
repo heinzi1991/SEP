@@ -38,11 +38,6 @@ Game::Game()
 //------------------------------------------------------------------------------
 Game::~Game()
 {
-    /*for (auto iter = possible_commands_.begin(); iter != possible_commands_.end(); ++iter)
-    {
-        delete iter->second;
-        possible_commands_.erase(iter);
-    }*/
     
 }
 //------------------------------------------------------------------------------
@@ -104,6 +99,10 @@ void Game::setFastMove(bool fastMoveMode)
 //------------------------------------------------------------------------------
 void Game::deleteCommands()
 {
+    check_map_.clear();
+    fix_game_map_.clear();
+    all_teleports_map_.clear();
+    
     for (auto iter = possible_commands_.begin();
          iter != possible_commands_.end();
          ++iter)
@@ -175,7 +174,10 @@ std::vector<std::string>Game::splitCommand(std::string s)
     
     while (stream >> word)
     {
-        if(toLower(word) == "load" || toLower(word) == "save" || toLower(word) == "fastmove" || toLower(word) == "move" || toLower(word) == "show" || toLower(word) == "reset" || toLower(word) == "quit")
+        if(toLower(word) == "load" || toLower(word) == "save" ||
+           toLower(word) == "fastmove" || toLower(word) == "move" ||
+           toLower(word) == "show" || toLower(word) == "reset" ||
+           toLower(word) == "quit")
         {
             result.push_back(toLower(word));
         }
@@ -227,6 +229,8 @@ void Game::initCommands()
 //------------------------------------------------------------------------------
 void Game::loadFile(std::string fileName)
 {
+    check_map_.clear();
+    
     if(fileName.length() > 255)
     {
         std::cout << "Error: Wrong parameter." << std::endl;
@@ -235,7 +239,10 @@ void Game::loadFile(std::string fileName)
     
     for(int counter = 0; counter < fileName.length(); counter++)
     {
-        if((fileName.at(counter) >= 32 &&  fileName.at(counter) < 46) || (fileName.at(counter) >= 58 && fileName.at(counter) < 65) || (fileName.at(counter) > 90 && fileName.at(counter) < 97) || (fileName.at(counter) > 122 && fileName.at(counter) < 127))
+        if((fileName.at(counter) >= 32 &&  fileName.at(counter) < 46) ||
+           (fileName.at(counter) >= 58 && fileName.at(counter) < 65) ||
+           (fileName.at(counter) > 90 && fileName.at(counter) < 97) ||
+           (fileName.at(counter) > 122 && fileName.at(counter) < 127))
         {
             std::cout << "Error: Wrong parameter." << std::endl;
             return;
@@ -334,7 +341,10 @@ void Game::saveFile(std::string fileName)
     
     for(int counter = 0; counter < fileName.length(); counter++)
     {
-        if((fileName.at(counter) >= 32 &&  fileName.at(counter) < 46) || (fileName.at(counter) >= 58 && fileName.at(counter) < 65) || (fileName.at(counter) > 90 && fileName.at(counter) < 97) || (fileName.at(counter) > 122 && fileName.at(counter) < 127))
+        if((fileName.at(counter) >= 32 &&  fileName.at(counter) < 46) ||
+           (fileName.at(counter) >= 58 && fileName.at(counter) < 65) ||
+           (fileName.at(counter) > 90 && fileName.at(counter) < 97) ||
+           (fileName.at(counter) > 122 && fileName.at(counter) < 127))
         {
             std::cout << "Error: Wrong parameter." << std::endl;
             return;
@@ -394,12 +404,15 @@ bool Game::checkIfValidMaze()
     int tempLineCount = 0;
     int fieldCounter = 1;
     std::map<char, int> teleportMap;
-    int fieldArray[] = {32, 35, 43, 60, 62, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 94, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 111, 118, 120};
+    int fieldArray[] = {32, 35, 43, 60, 62, 65, 66, 67, 68, 69, 70, 71, 72, 73,
+        74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 94,
+        97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 111, 118, 120};
     
     
     for(int counter = 0; counter < input_moves_.length(); counter++)
     {
-        if(input_moves_.at(counter) != 'u' && input_moves_.at(counter) != 'd' && input_moves_.at(counter) != 'l' && input_moves_.at(counter) != 'r')
+        if(input_moves_.at(counter) != 'u' && input_moves_.at(counter) != 'd' &&
+           input_moves_.at(counter) != 'l' && input_moves_.at(counter) != 'r')
         {
             std::cout << "DEBUG: wrong short moves" << std::endl;
             return false;
@@ -413,7 +426,8 @@ bool Game::checkIfValidMaze()
             tempLineCount = (int)check_map_.at(counter).size();
         }
         
-        if(tempLineCount > (int)check_map_.at(counter).size() || tempLineCount < (int)check_map_.at(counter).size())
+        if(tempLineCount > (int)check_map_.at(counter).size() ||
+           tempLineCount < (int)check_map_.at(counter).size())
         {
             std::cout << "DEBUG: lines different size" << std::endl;
             return false;
@@ -486,7 +500,8 @@ bool Game::checkIfValidMaze()
         }
     }
     
-    for(std::map<char, int>::iterator it = teleportMap.begin(); it != teleportMap.end(); it++)
+    for(std::map<char, int>::iterator it = teleportMap.begin();
+        it != teleportMap.end(); it++)
     {
         if(it -> second != 2)
         {
@@ -498,7 +513,8 @@ bool Game::checkIfValidMaze()
     std::vector<char> firstMazeRow = check_map_.at(0);
     std::vector<char> lastMazeRow = check_map_.at(check_map_.size() - 1);
     
-    for(std::vector<char>::iterator it = firstMazeRow.begin(); it != firstMazeRow.end(); it++)
+    for(std::vector<char>::iterator it = firstMazeRow.begin();
+        it != firstMazeRow.end(); it++)
     {
         if(*it != '#')
         {
@@ -507,7 +523,8 @@ bool Game::checkIfValidMaze()
         }
     }
     
-    for(std::vector<char>::iterator it = lastMazeRow.begin(); it != lastMazeRow.end(); it++)
+    for(std::vector<char>::iterator it = lastMazeRow.begin();
+        it != lastMazeRow.end(); it++)
     {
         if(*it != '#')
         {
@@ -578,7 +595,7 @@ void Game::writeFixMaze()
         fix_game_map_.push_back(bufferIn);
     }
     
-    check_map_.clear();
+    //check_map_.clear();
 }
 
 //------------------------------------------------------------------------------
@@ -586,9 +603,9 @@ void Game::showMaze(std::string parameter)
 {
     if(parameter == "noMore")
     {
-        for(int counter = 0; counter < fix_game_map_.size(); counter++)
+        for(int counter = 0; counter < check_map_.size(); counter++)
         {
-            std::vector<char> buffer = fix_game_map_.at(counter);
+            std::vector<char> buffer = check_map_.at(counter);
             
             for(int counter2 = 0; counter2 < buffer.size(); counter2++)
             {
@@ -610,9 +627,9 @@ void Game::showMaze(std::string parameter)
         std::cout << "Remaining Steps: " << current_steps_ << std::endl;
         std::cout << "Moved Steps: " << input_moves_ << std::endl;
         
-        for(int counter = 0; counter < fix_game_map_.size(); counter++)
+        for(int counter = 0; counter < check_map_.size(); counter++)
         {
-            std::vector<char> buffer = fix_game_map_.at(counter);
+            std::vector<char> buffer = check_map_.at(counter);
             
             for(int counter2 = 0; counter2 < buffer.size(); counter2++)
             {
@@ -642,32 +659,40 @@ void Game::saveAllTeleports()
         testMap[counter] = 0;
     }
 
-    for(int counter = 0; counter < fix_game_map_.size(); counter++)
+    for(int counter = 0; counter < check_map_.size(); counter++)
     {
-        std::vector<char> buffer = fix_game_map_.at(counter);
+        std::vector<char> buffer = check_map_.at(counter);
         
         for(int counter2 = 0; counter2 < buffer.size(); counter2++)
         {
-            if(buffer.at(counter2) >= 'A' && buffer.at(counter2) <= 'Z' && testMap[buffer.at(counter2)] == 0)
+            if(buffer.at(counter2) >= 'A' && buffer.at(counter2) <= 'Z' &&
+               testMap[buffer.at(counter2)] == 0)
             {
                 testMap[buffer.at(counter2)] += 1;
-                std::pair<int, int> firstTuple = std::make_pair(counter, counter2);
-                std::pair<int, int> secondTuple = searchSecondPosition(counter, counter2 + 1, buffer.at(counter2));
-                all_teleports_map_[buffer.at(counter2)] = std::make_pair(firstTuple, secondTuple);
+                
+                std::pair<int, int> firstTuple =
+                std::make_pair(counter, counter2);
+                
+                std::pair<int, int> secondTuple =
+                searchSecondPosition(counter, counter2 + 1, buffer.at(counter2));
+                
+                all_teleports_map_[buffer.at(counter2)] =
+                std::make_pair(firstTuple, secondTuple);
             }
         }
     }
 }
 
 //------------------------------------------------------------------------------
-std::pair<int, int>Game::searchSecondPosition(int firstCount, int secondCount, char searchChar)
+std::pair<int, int>Game::searchSecondPosition(int firstCount, int secondCount,
+                                              char searchChar)
 {
     std::pair<int, int> returnPair;
     int buffCounter;
     
-    for(int counter = firstCount; counter < fix_game_map_.size(); counter++)
+    for(int counter = firstCount; counter < check_map_.size(); counter++)
     {
-        std::vector<char> buffer = fix_game_map_.at(counter);
+        std::vector<char> buffer = check_map_.at(counter);
         
         (counter == firstCount) ? (buffCounter = secondCount) : (buffCounter = 0);
         
@@ -802,14 +827,16 @@ bool Game::checkValidMove(std::string orientation)
 {
     if(orientation == "down")
     {
-        if(fix_game_map_.at(current_position_x_ + 1).at(current_position_y_) != '#')
+        if(check_map_.at(current_position_x_ + 1).at(current_position_y_)
+           != '#')
         {
             return true;
         }
     }
     else if(orientation == "up")
     {
-        if(fix_game_map_.at(current_position_x_ - 1).at(current_position_y_) != '#')
+        if(check_map_.at(current_position_x_ - 1).at(current_position_y_)
+           != '#')
         {
             return true;
         }
@@ -817,14 +844,16 @@ bool Game::checkValidMove(std::string orientation)
     }
     else if(orientation == "left")
     {
-        if(fix_game_map_.at(current_position_x_).at(current_position_y_ - 1) != '#')
+        if(check_map_.at(current_position_x_).at(current_position_y_ - 1)
+           != '#')
         {
             return true;
         }
     }
     else
     {
-        if(fix_game_map_.at(current_position_x_).at(current_position_y_ + 1) != '#')
+        if(check_map_.at(current_position_x_).at(current_position_y_ + 1)
+           != '#')
         {
             return true;
         }
@@ -840,7 +869,7 @@ void Game::makeOneMove(std::string orientation)
     {
         current_position_x_ = current_position_x_ + 1;
         
-        if(fix_game_map_.at(current_position_x_).at(current_position_y_) == '+')
+        if(check_map_.at(current_position_x_).at(current_position_y_) == '+')
         {
             while (checkValidMove("down"))
             {
@@ -849,24 +878,31 @@ void Game::makeOneMove(std::string orientation)
             }
         }
         
-        if(fix_game_map_.at(current_position_x_).at(current_position_y_) >= 'A' && fix_game_map_.at(current_position_x_).at(current_position_y_) <= 'Z')
+        if(check_map_.at(current_position_x_).at(current_position_y_) >= 'A'
+           && check_map_.at(current_position_x_).at(current_position_y_)
+           <= 'Z')
         {
-            teleportThePlayer(fix_game_map_.at(current_position_x_).at(current_position_y_));
+            teleportThePlayer(check_map_.at(current_position_x_).at(current_position_y_));
         }
         
-        if(fix_game_map_.at(current_position_x_).at(current_position_y_) >= 'a' && fix_game_map_.at(current_position_x_).at(current_position_y_) <= 'e')
+        if(check_map_.at(current_position_x_).at(current_position_y_) >= 'a'
+           && check_map_.at(current_position_x_).at(current_position_y_)
+           <= 'e')
         {
-            increaseCurrentSteps(fix_game_map_.at(current_position_x_).at(current_position_y_));
+            increaseCurrentSteps(check_map_.at(current_position_x_).at(current_position_y_));
         }
         
-        if(fix_game_map_.at(current_position_x_).at(current_position_y_) >= 'f' && fix_game_map_.at(current_position_x_).at(current_position_y_) <= 'j')
+        if(check_map_.at(current_position_x_).at(current_position_y_) >= 'f'
+           && check_map_.at(current_position_x_).at(current_position_y_)
+           <= 'j')
         {
-            reduceCurrentSteps(fix_game_map_.at(current_position_x_).at(current_position_y_));
+            reduceCurrentSteps(check_map_.at(current_position_x_).at(current_position_y_));
         }
         
         if(fast_move_activeted_ == false)
          {
-            if(fix_game_map_.at(current_position_x_).at(current_position_y_) == 'x')
+            if(check_map_.at(current_position_x_).at(current_position_y_)
+               == 'x')
             {
                 makeWin('d');
                 return;
@@ -874,7 +910,8 @@ void Game::makeOneMove(std::string orientation)
          }
          else
          {
-            if(fix_game_map_.at(current_position_x_).at(current_position_y_) == 'x' && last_move_of_series == true)
+            if(check_map_.at(current_position_x_).at(current_position_y_)
+               == 'x' && last_move_of_series == true)
             {
                 makeWin('d');
                 return;
@@ -885,7 +922,7 @@ void Game::makeOneMove(std::string orientation)
     {
         current_position_x_ = current_position_x_ - 1;
         
-        if(fix_game_map_.at(current_position_x_).at(current_position_y_) == '+')
+        if(check_map_.at(current_position_x_).at(current_position_y_) == '+')
         {
             while (checkValidMove("up"))
             {
@@ -894,24 +931,31 @@ void Game::makeOneMove(std::string orientation)
             }
         }
         
-        if(fix_game_map_.at(current_position_x_).at(current_position_y_) >= 'A' && fix_game_map_.at(current_position_x_).at(current_position_y_) <= 'Z')
+        if(check_map_.at(current_position_x_).at(current_position_y_) >= 'A'
+           && check_map_.at(current_position_x_).at(current_position_y_)
+           <= 'Z')
         {
-            teleportThePlayer(fix_game_map_.at(current_position_x_).at(current_position_y_));
+            teleportThePlayer(check_map_.at(current_position_x_).at(current_position_y_));
         }
         
-        if(fix_game_map_.at(current_position_x_).at(current_position_y_) >= 'a' && fix_game_map_.at(current_position_x_).at(current_position_y_) <= 'e')
+        if(check_map_.at(current_position_x_).at(current_position_y_) >= 'a'
+           && check_map_.at(current_position_x_).at(current_position_y_)
+           <= 'e')
         {
-            increaseCurrentSteps(fix_game_map_.at(current_position_x_).at(current_position_y_));
+            increaseCurrentSteps(check_map_.at(current_position_x_).at(current_position_y_));
         }
         
-        if(fix_game_map_.at(current_position_x_).at(current_position_y_) >= 'f' && fix_game_map_.at(current_position_x_).at(current_position_y_) <= 'j')
+        if(check_map_.at(current_position_x_).at(current_position_y_) >= 'f'
+           && check_map_.at(current_position_x_).at(current_position_y_)
+           <= 'j')
         {
-            reduceCurrentSteps(fix_game_map_.at(current_position_x_).at(current_position_y_));
+            reduceCurrentSteps(check_map_.at(current_position_x_).at(current_position_y_));
         }
         
         if(fast_move_activeted_ == false)
         {
-            if(fix_game_map_.at(current_position_x_).at(current_position_y_) == 'x')
+            if(check_map_.at(current_position_x_).at(current_position_y_)
+               == 'x')
             {
                 makeWin('u');
                 return;
@@ -919,7 +963,8 @@ void Game::makeOneMove(std::string orientation)
         }
         else
         {
-            if(fix_game_map_.at(current_position_x_).at(current_position_y_) == 'x' && last_move_of_series == true)
+            if(check_map_.at(current_position_x_).at(current_position_y_)
+               == 'x' && last_move_of_series == true)
             {
                 makeWin('u');
                 return;
@@ -931,7 +976,7 @@ void Game::makeOneMove(std::string orientation)
     {
         current_position_y_ = current_position_y_ - 1;
         
-        if(fix_game_map_.at(current_position_x_).at(current_position_y_) == '+')
+        if(check_map_.at(current_position_x_).at(current_position_y_) == '+')
         {
             while (checkValidMove("left"))
             {
@@ -940,24 +985,31 @@ void Game::makeOneMove(std::string orientation)
             }
         }
         
-        if(fix_game_map_.at(current_position_x_).at(current_position_y_) >= 'A' && fix_game_map_.at(current_position_x_).at(current_position_y_) <= 'Z')
+        if(check_map_.at(current_position_x_).at(current_position_y_) >= 'A'
+           && check_map_.at(current_position_x_).at(current_position_y_)
+           <= 'Z')
         {
-            teleportThePlayer(fix_game_map_.at(current_position_x_).at(current_position_y_));
+            teleportThePlayer(check_map_.at(current_position_x_).at(current_position_y_));
         }
         
-        if(fix_game_map_.at(current_position_x_).at(current_position_y_) >= 'a' && fix_game_map_.at(current_position_x_).at(current_position_y_) <= 'e')
+        if(check_map_.at(current_position_x_).at(current_position_y_) >= 'a'
+           && check_map_.at(current_position_x_).at(current_position_y_)
+           <= 'e')
         {
-            increaseCurrentSteps(fix_game_map_.at(current_position_x_).at(current_position_y_));
+            increaseCurrentSteps(check_map_.at(current_position_x_).at(current_position_y_));
         }
         
-        if(fix_game_map_.at(current_position_x_).at(current_position_y_) >= 'f' && fix_game_map_.at(current_position_x_).at(current_position_y_) <= 'j')
+        if(check_map_.at(current_position_x_).at(current_position_y_) >= 'f'
+           && check_map_.at(current_position_x_).at(current_position_y_)
+           <= 'j')
         {
-            reduceCurrentSteps(fix_game_map_.at(current_position_x_).at(current_position_y_));
+            reduceCurrentSteps(check_map_.at(current_position_x_).at(current_position_y_));
         }
         
         if(fast_move_activeted_ == false)
         {
-            if(fix_game_map_.at(current_position_x_).at(current_position_y_) == 'x')
+            if(check_map_.at(current_position_x_).at(current_position_y_)
+               == 'x')
             {
                 makeWin('l');
                 return;
@@ -965,7 +1017,8 @@ void Game::makeOneMove(std::string orientation)
         }
         else
         {
-            if(fix_game_map_.at(current_position_x_).at(current_position_y_) == 'x' && last_move_of_series == true)
+            if(check_map_.at(current_position_x_).at(current_position_y_)
+               == 'x' && last_move_of_series == true)
             {
                 makeWin('l');
                 return;
@@ -977,7 +1030,7 @@ void Game::makeOneMove(std::string orientation)
     {
         current_position_y_ = current_position_y_ + 1;
         
-        if(fix_game_map_.at(current_position_x_).at(current_position_y_) == '+')
+        if(check_map_.at(current_position_x_).at(current_position_y_) == '+')
         {
             while (checkValidMove("right"))
             {
@@ -986,24 +1039,31 @@ void Game::makeOneMove(std::string orientation)
             }
         }
         
-        if(fix_game_map_.at(current_position_x_).at(current_position_y_) >= 'A' && fix_game_map_.at(current_position_x_).at(current_position_y_) <= 'Z')
+        if(check_map_.at(current_position_x_).at(current_position_y_) >= 'A'
+           && check_map_.at(current_position_x_).at(current_position_y_)
+           <= 'Z')
         {
-            teleportThePlayer(fix_game_map_.at(current_position_x_).at(current_position_y_));
+            teleportThePlayer(check_map_.at(current_position_x_).at(current_position_y_));
         }
         
-        if(fix_game_map_.at(current_position_x_).at(current_position_y_) >= 'a' && fix_game_map_.at(current_position_x_).at(current_position_y_) <= 'e')
+        if(check_map_.at(current_position_x_).at(current_position_y_) >= 'a'
+           && check_map_.at(current_position_x_).at(current_position_y_)
+           <= 'e')
         {
-            increaseCurrentSteps(fix_game_map_.at(current_position_x_).at(current_position_y_));
+            increaseCurrentSteps(check_map_.at(current_position_x_).at(current_position_y_));
         }
         
-        if(fix_game_map_.at(current_position_x_).at(current_position_y_) >= 'f' && fix_game_map_.at(current_position_x_).at(current_position_y_) <= 'j')
+        if(check_map_.at(current_position_x_).at(current_position_y_) >= 'f'
+           && check_map_.at(current_position_x_).at(current_position_y_)
+           <= 'j')
         {
-            reduceCurrentSteps(fix_game_map_.at(current_position_x_).at(current_position_y_));
+            reduceCurrentSteps(check_map_.at(current_position_x_).at(current_position_y_));
         }
         
         if(fast_move_activeted_ == false)
         {
-            if(fix_game_map_.at(current_position_x_).at(current_position_y_) == 'x')
+            if(check_map_.at(current_position_x_).at(current_position_y_)
+               == 'x')
             {
                 makeWin('r');
                 return;
@@ -1011,7 +1071,8 @@ void Game::makeOneMove(std::string orientation)
         }
         else
         {
-            if(fix_game_map_.at(current_position_x_).at(current_position_y_) == 'x' && last_move_of_series == true)
+            if(check_map_.at(current_position_x_).at(current_position_y_)
+               == 'x' && last_move_of_series == true)
             {
                 makeWin('r');
                 return;
@@ -1033,12 +1094,14 @@ void Game::teleportThePlayer(char teleportField)
     firstField = teleportPair.first;
     secondField = teleportPair.second;
     
-    if(current_position_x_ == firstField.first && current_position_y_ == firstField.second)
+    if(current_position_x_ == firstField.first
+       && current_position_y_ == firstField.second)
     {
         current_position_x_ = secondField.first;
         current_position_y_ = secondField.second;
     }
-    else if(current_position_x_ == secondField.first && current_position_y_ == secondField.second)
+    else if(current_position_x_ == secondField.first
+            && current_position_y_ == secondField.second)
     {
         current_position_x_ = firstField.first;
         current_position_y_ = firstField.second;
@@ -1052,28 +1115,28 @@ void Game::teleportThePlayer(char teleportField)
 //------------------------------------------------------------------------------
 bool Game::checkOneWayField(std::string orientation)
 {
-    if(fix_game_map_.at(current_position_x_).at(current_position_y_) == '>')
+    if(check_map_.at(current_position_x_).at(current_position_y_) == '>')
     {
         if(orientation != "right")
         {
             return false;
         }
     }
-    else if(fix_game_map_.at(current_position_x_).at(current_position_y_) == '<')
+    else if(check_map_.at(current_position_x_).at(current_position_y_) == '<')
     {
         if(orientation != "left")
         {
             return false;
         }
     }
-    else if(fix_game_map_.at(current_position_x_).at(current_position_y_) == 'v')
+    else if(check_map_.at(current_position_x_).at(current_position_y_) == 'v')
     {
         if(orientation != "down")
         {
             return false;
         }
     }
-    else if(fix_game_map_.at(current_position_x_).at(current_position_y_) == '^')
+    else if(check_map_.at(current_position_x_).at(current_position_y_) == '^')
     {
         if(orientation != "up")
         {
@@ -1094,9 +1157,7 @@ void Game::reduceCurrentSteps(char reduceField)
     reduceMap['h'] = 3;
     reduceMap['i'] = 4;
     reduceMap['j'] = 5;
-    
-    fix_game_map_.at(current_position_x_).at(current_position_y_) = ' ';
-    
+        
     if(current_steps_ - reduceMap[reduceField] < 0)
     {
         current_steps_ = 0;
@@ -1118,7 +1179,7 @@ void Game::increaseCurrentSteps(char increaseField)
     increaseMap['d'] = 4;
     increaseMap['e'] = 5;
     
-    fix_game_map_.at(current_position_x_).at(current_position_y_) = ' ';
+    check_map_.at(current_position_x_).at(current_position_y_) = ' ';
     current_steps_ = current_steps_ + increaseMap[increaseField];
 }
 
