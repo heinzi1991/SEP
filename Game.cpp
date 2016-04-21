@@ -85,17 +85,6 @@ void Game::setFastMove(bool fastMoveMode)
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
 //------------------------------------------------------------------------------
 void Game::deleteCommands()
 {
@@ -237,7 +226,7 @@ void Game::loadFile(std::string fileName)
         return;
     }
     
-    for(int counter = 0; counter < fileName.length(); counter++)
+    for(unsigned int counter = 0; counter < fileName.length(); counter++)
     {
         if((fileName.at(counter) >= 32 &&  fileName.at(counter) < 46) ||
            (fileName.at(counter) >= 58 && fileName.at(counter) < 65) ||
@@ -339,7 +328,7 @@ void Game::saveFile(std::string fileName)
         return;
     }
     
-    for(int counter = 0; counter < fileName.length(); counter++)
+    for(unsigned int counter = 0; counter < fileName.length(); counter++)
     {
         if((fileName.at(counter) >= 32 &&  fileName.at(counter) < 46) ||
            (fileName.at(counter) >= 58 && fileName.at(counter) < 65) ||
@@ -359,11 +348,11 @@ void Game::saveFile(std::string fileName)
         onf << input_moves_ << std::endl;
         onf << maximum_steps_ << std::endl;
         
-        for(int counter = 0; counter < fix_game_map_.size(); counter++)
+        for(unsigned int counter = 0; counter < fix_game_map_.size(); counter++)
         {
             std::vector<char> buffer = fix_game_map_.at(counter);
             
-            for(int counter2 = 0; counter2 < buffer.size(); counter2++)
+            for(unsigned int counter2 = 0; counter2 < buffer.size(); counter2++)
             {
                 onf << buffer.at(counter2);
             }
@@ -388,7 +377,7 @@ void Game::writeToCheckMap(std::string oneLine, int lineNumber)
     
     std::vector<char> buffer;
     
-    for(int counter = 0; counter < oneLine.length(); counter++)
+    for(unsigned int counter = 0; counter < oneLine.length(); counter++)
     {
         buffer.push_back(oneLine.at(counter));
     }
@@ -409,7 +398,7 @@ bool Game::checkIfValidMaze()
         97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 111, 118, 120};
     
     
-    for(int counter = 0; counter < input_moves_.length(); counter++)
+    for(unsigned int counter = 0; counter < input_moves_.length(); counter++)
     {
         if(input_moves_.at(counter) != 'u' && input_moves_.at(counter) != 'd' &&
            input_moves_.at(counter) != 'l' && input_moves_.at(counter) != 'r')
@@ -419,7 +408,7 @@ bool Game::checkIfValidMaze()
         }
     }
     
-    for(int counter = 0; counter < check_map_.size(); counter++)
+    for(unsigned int counter = 0; counter < check_map_.size(); counter++)
     {
         if(counter == 0)
         {
@@ -434,11 +423,11 @@ bool Game::checkIfValidMaze()
         }
     }
     
-    for(int counter = 0; counter < check_map_.size(); counter++)
+    for(unsigned int counter = 0; counter < check_map_.size(); counter++)
     {
         std::vector<char> buffer = check_map_.at(counter);
         
-        for(int counter2 = 0; counter2 < buffer.size(); counter2++)
+        for(unsigned int counter2 = 0; counter2 < buffer.size(); counter2++)
         {
             for(int counter3 = 0; counter3 < 44; counter3++)
             {
@@ -457,11 +446,11 @@ bool Game::checkIfValidMaze()
     }
 
     
-    for(int counter = 0; counter < check_map_.size(); counter++)
+    for(unsigned int counter = 0; counter < check_map_.size(); counter++)
     {
         std::vector<char> buffer = check_map_.at(counter);
         
-        for(int counter2 = 0; counter2 < buffer.size(); counter2++)
+        for(unsigned int counter2 = 0; counter2 < buffer.size(); counter2++)
         {
             if (buffer.at(counter2) == 'o')
             {
@@ -533,7 +522,7 @@ bool Game::checkIfValidMaze()
         }
     }
     
-    for(int counter = 0; counter < check_map_.size(); counter++)
+    for(unsigned int counter = 0; counter < check_map_.size(); counter++)
     {
         std::vector<char> buffer = check_map_.at(counter);
         
@@ -559,7 +548,7 @@ bool Game::checkIfValidPath(std::string inputMoves)
     directionMap['r'] = "right";
     
     
-    for(int counter = 0; counter < input_moves_.length(); counter++)
+    for(unsigned int counter = 0; counter < input_moves_.length(); counter++)
     {
         if(counter == (input_moves_.length() - 1))
         {
@@ -582,20 +571,18 @@ bool Game::checkIfValidPath(std::string inputMoves)
 //------------------------------------------------------------------------------
 void Game::writeFixMaze()
 {
-    for(int counter = 0; counter < check_map_.size(); counter++)
+    for(unsigned int counter = 0; counter < check_map_.size(); counter++)
     {
         std::vector<char> buffer = check_map_.at(counter);
         std::vector<char> bufferIn;
         
-        for(int counter2 = 0; counter2 < buffer.size(); counter2++)
+        for(unsigned int counter2 = 0; counter2 < buffer.size(); counter2++)
         {
             bufferIn.push_back(buffer.at(counter2));
         }
         
         fix_game_map_.push_back(bufferIn);
     }
-    
-    //check_map_.clear();
 }
 
 //------------------------------------------------------------------------------
@@ -603,11 +590,11 @@ void Game::showMaze(std::string parameter)
 {
     if(parameter == "noMore")
     {
-        for(int counter = 0; counter < check_map_.size(); counter++)
+        for(unsigned int counter = 0; counter < check_map_.size(); counter++)
         {
             std::vector<char> buffer = check_map_.at(counter);
             
-            for(int counter2 = 0; counter2 < buffer.size(); counter2++)
+            for(unsigned int counter2 = 0; counter2 < buffer.size(); counter2++)
             {
                 if(counter == current_position_x_ && counter2 == current_position_y_)
                 {
@@ -627,11 +614,11 @@ void Game::showMaze(std::string parameter)
         std::cout << "Remaining Steps: " << current_steps_ << std::endl;
         std::cout << "Moved Steps: " << input_moves_ << std::endl;
         
-        for(int counter = 0; counter < check_map_.size(); counter++)
+        for(unsigned int counter = 0; counter < check_map_.size(); counter++)
         {
             std::vector<char> buffer = check_map_.at(counter);
             
-            for(int counter2 = 0; counter2 < buffer.size(); counter2++)
+            for(unsigned int counter2 = 0; counter2 < buffer.size(); counter2++)
             {
                 if(counter == current_position_x_ && counter2 == current_position_y_)
                 {
@@ -659,11 +646,11 @@ void Game::saveAllTeleports()
         testMap[counter] = 0;
     }
 
-    for(int counter = 0; counter < check_map_.size(); counter++)
+    for(unsigned int counter = 0; counter < check_map_.size(); counter++)
     {
         std::vector<char> buffer = check_map_.at(counter);
         
-        for(int counter2 = 0; counter2 < buffer.size(); counter2++)
+        for(unsigned int counter2 = 0; counter2 < buffer.size(); counter2++)
         {
             if(buffer.at(counter2) >= 'A' && buffer.at(counter2) <= 'Z' &&
                testMap[buffer.at(counter2)] == 0)
@@ -684,19 +671,20 @@ void Game::saveAllTeleports()
 }
 
 //------------------------------------------------------------------------------
-std::pair<int, int>Game::searchSecondPosition(int firstCount, int secondCount,
+std::pair<int, int>Game::searchSecondPosition(unsigned int firstCount,
+                                              unsigned int secondCount,
                                               char searchChar)
 {
     std::pair<int, int> returnPair;
-    int buffCounter;
+    unsigned int buffCounter;
     
-    for(int counter = firstCount; counter < check_map_.size(); counter++)
+    for(unsigned int counter = firstCount; counter < check_map_.size(); counter++)
     {
         std::vector<char> buffer = check_map_.at(counter);
         
         (counter == firstCount) ? (buffCounter = secondCount) : (buffCounter = 0);
         
-        for(int counter2 = buffCounter; counter2 < buffer.size(); counter2++)
+        for(unsigned int counter2 = buffCounter; counter2 < buffer.size(); counter2++)
         {
             if(buffer.at(counter2) == searchChar)
             {
@@ -785,7 +773,7 @@ void Game::makeMoreMoves(std::string moves)
     int tempY = current_position_y_;
     
     
-    for(int counter = 0; counter < moves.length(); counter++)
+    for(unsigned int counter = 0; counter < moves.length(); counter++)
     {
         if(counter == (moves.length() - 1))
         {
@@ -1085,9 +1073,11 @@ void Game::makeOneMove(std::string orientation)
 //------------------------------------------------------------------------------
 void Game::teleportThePlayer(char teleportField)
 {
-    std::pair<std::pair<int, int>, std::pair<int, int>> teleportPair;
-    std::pair<int, int> firstField;
-    std::pair<int, int> secondField;
+    std::pair<std::pair<unsigned int, unsigned int>,
+    std::pair<unsigned int, unsigned int>> teleportPair;
+    
+    std::pair<unsigned int, unsigned int> firstField;
+    std::pair<unsigned int, unsigned int> secondField;
     
     teleportPair = all_teleports_map_[teleportField];
     
@@ -1157,7 +1147,7 @@ void Game::reduceCurrentSteps(char reduceField)
     reduceMap['h'] = 3;
     reduceMap['i'] = 4;
     reduceMap['j'] = 5;
-        
+    
     if(current_steps_ - reduceMap[reduceField] < 0)
     {
         current_steps_ = 0;

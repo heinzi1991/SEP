@@ -39,11 +39,11 @@ private:
     int start_position_y_;
     int target_position_x_;
     int target_position_y_;
-    int current_position_x_;
-    int current_position_y_;
+    unsigned int current_position_x_;
+    unsigned int current_position_y_;
     int maze_width_;
     int maze_height_;
-    int fast_move_counter_ = 0;
+    unsigned int fast_move_counter_ = 0;
     
     bool save_mode_ = false;
     bool load_mode_ = false;
@@ -197,7 +197,8 @@ public:
     // @param char searchChar
     // @return std::pair<int, int>
     //
-    std::pair<int, int> searchSecondPosition(int firstCount, int secondCount,
+    std::pair<int, int> searchSecondPosition(unsigned int firstCount,
+                                             unsigned int secondCount,
                                              char searchChar);
     
     //--------------------------------------------------------------------------
