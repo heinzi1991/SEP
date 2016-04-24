@@ -403,7 +403,6 @@ bool Game::checkIfValidMaze()
         if(input_moves_.at(counter) != 'u' && input_moves_.at(counter) != 'd' &&
            input_moves_.at(counter) != 'l' && input_moves_.at(counter) != 'r')
         {
-            std::cout << "DEBUG: wrong short moves" << std::endl;
             return false;
         }
     }
@@ -418,7 +417,6 @@ bool Game::checkIfValidMaze()
         if(tempLineCount > (int)check_map_.at(counter).size() ||
            tempLineCount < (int)check_map_.at(counter).size())
         {
-            std::cout << "DEBUG: lines different size" << std::endl;
             return false;
         }
     }
@@ -441,7 +439,6 @@ bool Game::checkIfValidMaze()
     
     if(fieldCounter != (maze_height_ * maze_width_))
     {
-        std::cout << "DEBUG: invalid field" << std::endl;
         return false;
     }
 
@@ -462,7 +459,6 @@ bool Game::checkIfValidMaze()
                 }
                 else
                 {
-                    std::cout << "DEBUG: more startfields" << std::endl;
                     return false;
                 }
             }
@@ -477,7 +473,6 @@ bool Game::checkIfValidMaze()
                 }
                 else
                 {
-                    std::cout << "DEBUG: more targetfields" << std::endl;
                     return false;
                 }
             }
@@ -494,7 +489,6 @@ bool Game::checkIfValidMaze()
     {
         if(it -> second != 2)
         {
-            std::cout << "DEBUG: not 2 teleports" << std::endl;
             return false;
         }
     }
@@ -507,7 +501,6 @@ bool Game::checkIfValidMaze()
     {
         if(*it != '#')
         {
-            std::cout << "DEBUG: first row no hashtag" << std::endl;
             return false;
         }
     }
@@ -517,7 +510,6 @@ bool Game::checkIfValidMaze()
     {
         if(*it != '#')
         {
-            std::cout << "DEBUG: last row no hashtag" << std::endl;
             return false;
         }
     }
@@ -528,7 +520,6 @@ bool Game::checkIfValidMaze()
         
         if(buffer.at(0) != '#' || buffer.at(buffer.size() - 1) != '#')
         {
-            std::cout << "DEBUG: left and right no hashtag" << std::endl;
             return false;
         }
     }
@@ -714,7 +705,6 @@ void Game::makeMoveInDirection(std::string direction)
     
     if(checkOneWayField(direction) == false)
     {
-        std::cout << "DEBUG: Invalid move. (onewayField)" << std::endl;
         return;
     }
     
