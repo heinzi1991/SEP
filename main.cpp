@@ -1,13 +1,12 @@
 //------------------------------------------------------------------------------
-// Filename:		mian.cpp
+// Filename:				main.cpp
 // Description:     The main class. Check if every command parameter is right
-// Authors:         Karim Koutp             (1314710)
-//					Tina Promitzer			(1311885)
-//					Martin Zagar			(1131246)
-// Tutor:			Christoph Maurer
-// Group:			6
-// Created:			18.03.2016
-// Last change:     25.03.2016
+// Authors:					Tina Promitzer			(1311885)
+//									Martin Zagar			(1131246)
+// Tutor:						Christoph Maurer
+// Group:						6
+// Created:					18.03.2016
+// Last change:     04.05.2016
 //------------------------------------------------------------------------------
 
 #include <iostream>
@@ -25,63 +24,63 @@
 
 int main(int argc, char **argv)
 {
-    Game pokemon;
-    
-    if(argc == 3)
-    {
-        if ((std::string)argv[1] == "-s")
-        {
-            pokemon.setSaveMode(true);
-            pokemon.setSaveFileName(argv[2]);
-            
-        }
-        else if ((std::string)argv[1] == "-m")
-        {
-            pokemon.setLoadMode(true);
-            pokemon.loadFile(argv[2]);
-        }
-        else
-        {
-            std::cout << "Wrong usage: ./basic [-s <filename1>] [-m <filename2>]"
-            << std::endl;
-            return 2;
-        }
-    }
-    
-    if(argc == 5)
-    {
-        pokemon.setLoadMode(true);
-        pokemon.setSaveMode(true);
-        
-        if ((std::string)argv[1] == "-s")
-        {
-            pokemon.setSaveFileName(argv[2]);
-            pokemon.loadFile(argv[4]);
-            pokemon.saveFile(argv[2]);
-        }
-        else if((std::string)argv[1] == "-m")
-        {
-            pokemon.setSaveFileName(argv[4]);
-            pokemon.loadFile(argv[2]);
-            pokemon.saveFile(argv[4]);
-        }
-    }
-    
-    if(argc == 4 || argc == 2)
-    {
-        std::cout << "Wrong usage: ./basic [-s <filename1>] [-m <filename2>]"
-        << std::endl;
-        return 2;
-    }
-    
-    try
-    {
-        pokemon.run();
-    }
-    catch(std::bad_alloc& ba)
-    {
-        std::cout << "Error: Out of memory!" << std::endl;
-    }
-    
-    return 0;
+	Game pokemon;
+	
+	if (argc == 3)
+	{
+		if ((std::string) argv[1] == "-s")
+		{
+			pokemon.setSaveMode(true);
+			pokemon.setSaveFileName(argv[2]);
+			
+		}
+		else if ((std::string) argv[1] == "-m")
+		{
+			pokemon.setLoadMode(true);
+			pokemon.loadFile(argv[2]);
+		}
+		else
+		{
+			std::cout << "Wrong usage: ./basic [-s <filename1>] [-m <filename2>]"
+			<< std::endl;
+			return 2;
+		}
+	}
+	
+	if (argc == 5)
+	{
+		pokemon.setLoadMode(true);
+		pokemon.setSaveMode(true);
+		
+		if ((std::string) argv[1] == "-s")
+		{
+			pokemon.setSaveFileName(argv[2]);
+			pokemon.loadFile(argv[4]);
+			pokemon.saveFile(argv[2]);
+		}
+		else if ((std::string) argv[1] == "-m")
+		{
+			pokemon.setSaveFileName(argv[4]);
+			pokemon.loadFile(argv[2]);
+			pokemon.saveFile(argv[4]);
+		}
+	}
+	
+	if (argc == 4 || argc == 2 || argc > 5)
+	{
+		std::cout << "Wrong usage: ./basic [-s <filename1>] [-m <filename2>]"
+		<< std::endl;
+		return 2;
+	}
+	
+	try
+	{
+		pokemon.run();
+	}
+	catch (std::bad_alloc &ba)
+	{
+		std::cout << "Error: Out of memory!" << std::endl;
+	}
+	
+	return 0;
 }
