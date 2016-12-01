@@ -1,14 +1,3 @@
-//------------------------------------------------------------------------------
-// Filename:				Game.cpp
-// Description:     This class is the brain of the game. Every function is here.
-// Authors:					Tina Promitzer			(1311885)
-//									Martin Zagar			(1131246)
-// Tutor:						Christoph Maurer
-// Group:						6
-// Created:					18.03.2016
-// Last change:     04.05.2016
-//------------------------------------------------------------------------------
-
 #include <iostream>
 #include <string>
 #include <map>
@@ -588,19 +577,7 @@ bool Game::checkIfValidPath(std::string inputMoves)
 	int tempY = current_position_y_;
 	std::string tempMoves = input_moves_;
 	tempCurrentSteps = current_steps_;
-	
-	
-	/*for(unsigned int counter = 0; counter < moves.length(); counter++)
-	 {
-		if(counter == (moves.length() - 1))
-		{
-	 last_move_of_series = true;
-		}
 		
-		makeMoveInDirection(directionMap[moves.at(counter)]);
-	 }*/
-	
-	
 	while (tempCurrentSteps > 0)
 	{
 		if (tempMoves.length() == 0)
@@ -634,30 +611,6 @@ bool Game::checkIfValidPath(std::string inputMoves)
 		last_move_of_series = false;
 		return true;
 	}
-	
-	
-	
-	
-	
-	
-	/*for(unsigned int counter = 0; counter < input_moves_.length(); counter++)
-	{
-		if(counter == (input_moves_.length() - 1))
-		{
-			last_move_of_series = true;
-		}
-		
-		makeMoveInDirection(directionMap[input_moves_.at(counter)]);
-	}
-	
-	last_move_of_series = false;
-	
-	if(fast_move_counter_ != input_moves_.length())
-	{
-		return false;
-	}
-	
-	return true;*/
 }
 
 //------------------------------------------------------------------------------
@@ -863,19 +816,7 @@ void Game::makeMoreMoves(std::string moves)
 	int tempY = current_position_y_;
 	std::string tempMoves = moves;
 	tempCurrentSteps = current_steps_;
-	
-	
-	/*for(unsigned int counter = 0; counter < moves.length(); counter++)
-	{
-		if(counter == (moves.length() - 1))
-		{
-			last_move_of_series = true;
-		}
-		
-		makeMoveInDirection(directionMap[moves.at(counter)]);
-	}*/
-	
-	
+
 	while (tempCurrentSteps > 0)
 	{
 		if (tempMoves.length() == 0)
@@ -920,34 +861,6 @@ void Game::makeMoreMoves(std::string moves)
 	}
 	
 	last_move_of_series = false;
-	
-	/*if(fast_move_counter_ == moves.length())
-	{
-		input_moves_ += moves;
-		current_steps_ = current_steps_ - (int)moves.length();
-		
-		if(save_mode_)
-		{
-			saveFile(save_file_name_);
-			
-		}
-		
-		if(finish_maze_ == false)
-		{
-			showMaze("noMore");
-		}
-		
-		fast_move_counter_ = 0;
-	}
-	else
-	{
-		current_position_x_ = tempX;
-		current_position_y_ = tempY;
-		
-		std::cout << "[ERR] Invalid move." << std::endl;
-	}*/
-	
-	
 }
 
 //------------------------------------------------------------------------------
