@@ -101,7 +101,7 @@ void Game::run()
 	
 	while (state == KEEP_RUNNING)
 	{
-		std::cout << "sep> ";
+		std::cout << "> ";
 		getline(std::cin, input_);
 		
 		if (input_ != "")
