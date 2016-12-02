@@ -21,3 +21,14 @@ There may also be several ways to get to the goal.
 
 
 
+## Commands
+* **load <filename>**            => load a new maze from filename
+* **save <filename>**            => save the maze with the filename
+* **fastmove <series of steps>** => make a series of steps (steps are: u [up], d [down], l [left], r [right])
+* **move <direction>**           => make one move in the direction (directions are: up, down, left, right)
+* **show**                       => show the maze, with the paramter [more] it shows also the remaining steps and the moved steps
+* **reset**                      => reset the maze
+* **quit**                       => quit the game
+
+
+
