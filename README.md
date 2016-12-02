@@ -20,6 +20,8 @@ There may also be several ways to get to the goal.
 * 'f-j'        => Quicksand Field
 
 A maze can look like:
+
+
 ![alt text](https://github.com/heinzi1991/SEP/blob/master/Images/OneMaze.png "Possible Maze")
 
 
