@@ -9,21 +9,15 @@ but there are also fields, that make it harder.
 There may also be several ways to get to the goal.
 
 ## Field types
-'#'          => Wall
-' '          => Path
-'o'          => Start Field
-'x'          => Goal Field
-'+'          => Ice Field
-'A-Z'        => Teleport Field
-'>, <, ^, v' => One Way Field 
-'a-e'        => Bonus Field
-'f-j'        => Quicksand Field
+* '#'          => Wall
+* ' '          => Path
+* 'o'          => Start Field
+* 'x'          => Goal Field
+* '+'          => Ice Field
+* 'A-Z'        => Teleport Field
+* '>, <, ^, v' => One Way Field 
+* 'a-e'        => Bonus Field
+* 'f-j'        => Quicksand Field
 
-############################
-#+o#Ce##########C<#D   #bEF#
-#A+# e#++#++*++#i^##v# ### #
-# +####++++++++>  D#E#     #
-# +#B#>++++++#+#############
-# A  #B+#++#+++#x   F+++++>#
-############################
+
 
