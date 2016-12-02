@@ -25,6 +25,8 @@ A maze can look like:
 ![alt text](https://github.com/heinzi1991/SEP/blob/master/Images/OneMaze.png "Possible Maze")
 
 
+This maze can find in the folder with the name Mazes
+
 
 ## Commands
 * **load [filename]**            => load a new maze from filename
@@ -34,6 +36,9 @@ A maze can look like:
 * **show**                       => show the maze, with the paramter [more] it shows also the remaining steps and the moved steps
 * **reset**                      => reset the maze
 * **quit**                       => quit the game
+
+#### Any Questions or Suggestions
+martin.zagar@student.tugraz.at
 
 
 
