@@ -1,5 +1,0 @@
-load testcases/all.poke
-move down
-fastmove u
-move INVALID
-quit
